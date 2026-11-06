@@ -4,10 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mía en la Gran Aventura del CEIP Gabriela Mistral - 50º Aniversario</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap');
     
@@ -45,7 +42,6 @@
       transition: left 0.6s ease-in-out, top 0.6s ease-in-out;
     }
 
-    /* Fondo ilustrado del plano escolar */
     .school-map-bg {
       background-color: #0f172a;
       background-image: 
@@ -83,7 +79,7 @@
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
 
-  <!-- INTRO INSTRUCTIONS MODAL -->
+  <!-- INTRO MODAL -->
   <div id="modal-intro" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="bg-gradient-to-b from-indigo-900 via-slate-900 to-slate-950 border-2 border-amber-400 rounded-3xl max-w-xl w-full p-6 md:p-8 shadow-2xl text-center flex flex-col items-center gap-5 relative">
       <div class="w-20 h-20 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-4xl shadow-xl">
@@ -105,7 +101,7 @@
     </div>
   </div>
 
-  <!-- TOP BAR / HEADER -->
+  <!-- HEADER -->
   <header class="bg-indigo-900 border-b border-indigo-700 px-4 py-3 shadow-lg flex flex-wrap items-center justify-between gap-4">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-full bg-amber-400 text-indigo-950 flex items-center justify-center font-bold text-xl shadow">
@@ -116,21 +112,17 @@
         <p class="text-xs text-indigo-200">Aventura Histórica e Interactiva con Mía</p>
       </div>
     </div>
-    <!-- BADGES COUNTER -->
     <div class="flex items-center gap-2 bg-indigo-950/80 px-4 py-1.5 rounded-full border border-indigo-700">
-      <i class="fa-solid fa-medal text-amber-400 text-lg"></i>
+      <span class="text-amber-400 text-lg">🏅</span>
       <span class="font-bold text-amber-300 ml-1" id="badge-count-text">0 / 8</span>
       <span class="text-xs text-slate-400 hidden sm:inline">Insignias</span>
     </div>
-    <!-- CONTROLS -->
     <div class="flex items-center gap-2 flex-wrap">
       <button onclick="openIntroModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-600 transition flex items-center gap-1.5">
-        <i class="fa-solid fa-circle-info text-amber-400"></i>
-        <span>Info</span>
+        <span>ℹ️ Info</span>
       </button>
       <button id="btn-sound" onclick="toggleSound()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-600 transition flex items-center gap-1.5">
-        <i id="icon-sound" class="fa-solid fa-volume-high text-emerald-400"></i>
-        <span id="text-sound">Audio: ON</span>
+        <span id="text-sound">🔊 Audio: ON</span>
       </button>
     </div>
   </header>
@@ -140,18 +132,14 @@
     <!-- BOARD CONTAINER -->
     <div class="flex-1 bg-slate-950 rounded-2xl border border-slate-800 shadow-2xl relative flex flex-col items-center justify-between p-4 min-h-[500px] overflow-hidden">
       
-      <!-- Banner Superior -->
       <div class="w-full bg-slate-900/90 border border-emerald-500/40 rounded-xl p-3 text-center shadow-lg z-10">
         <h2 class="text-amber-400 font-extrabold text-lg md:text-xl font-heading">CEIP GABRIELA MISTRAL - PLANO DE RUTAS</h2>
         <p class="text-slate-300 text-xs mt-0.5">🎉 50º Aniversario - Recorre el colegio con Mía usando el Dado 🎉</p>
       </div>
 
-      <!-- MAPA CON ILUSTRACIÓN DE FONDO -->
       <div id="board-container" class="relative w-full flex-1 my-4 school-map-bg rounded-2xl border border-slate-700 flex flex-col justify-around p-4 md:p-8 overflow-hidden shadow-2xl">
         
-        <!-- Ilustración de Mapa / Colegio de fondo -->
         <svg class="absolute inset-0 w-full h-full opacity-30 pointer-events-none" viewBox="0 0 800 400" preserveAspectRatio="none">
-          <!-- Dibujo del edificio principal -->
           <rect x="50" y="30" width="700" height="130" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
           <rect x="70" y="50" width="80" height="90" rx="5" fill="#334155"/>
           <rect x="170" y="50" width="80" height="90" rx="5" fill="#334155"/>
@@ -159,17 +147,13 @@
           <rect x="550" y="50" width="80" height="90" rx="5" fill="#334155"/>
           <rect x="650" y="50" width="80" height="90" rx="5" fill="#334155"/>
           
-          <!-- Dibujo del patio y pistas -->
           <rect x="50" y="200" width="700" height="170" rx="10" fill="#1e293b" stroke="#a855f7" stroke-width="2"/>
-          <!-- Pistas deportivas pintadas -->
           <rect x="420" y="220" width="160" height="130" rx="5" fill="rgba(249, 115, 22, 0.2)" stroke="#f97316" stroke-width="2"/>
           <circle cx="500" cy="285" r="25" fill="none" stroke="#f97316" stroke-width="2"/>
-          
-          <!-- Pasillo conectando ambos edificios -->
           <rect x="380" y="155" width="40" height="50" fill="#334155" stroke="#94a3b8" stroke-dasharray="4"/>
         </svg>
 
-        <!-- Fila Superior: Zona de Aulas y Deportes -->
+        <!-- Fila Superior -->
         <div class="relative bg-slate-950/80 backdrop-blur-sm border-2 border-sky-500/80 rounded-2xl p-4 md:p-6 shadow-2xl z-10">
           <span class="absolute -top-3 left-4 bg-sky-950 text-sky-300 border border-sky-400 font-extrabold text-[11px] px-3 py-0.5 rounded-full uppercase tracking-wider shadow">
             🏫 Zona de Aulas y Deportes
@@ -177,24 +161,24 @@
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 items-center justify-items-center">
             <button onclick="handleStationClick('aula_abierta')" class="group flex flex-col items-center gap-1.5 focus:outline-none">
               <div id="badge-st-aula_abierta" class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-emerald-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">5</div>
-              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center drop-shadow">Aula Abierta</span>
+              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center">Aula Abierta</span>
             </button>
             <button onclick="handleStationClick('aula_futuro')" class="group flex flex-col items-center gap-1.5 focus:outline-none">
               <div id="badge-st-aula_futuro" class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-cyan-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">6</div>
-              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center drop-shadow">Informática y Futuro</span>
+              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center">Informática y Futuro</span>
             </button>
             <button onclick="handleStationClick('deportes')" class="group flex flex-col items-center gap-1.5 focus:outline-none">
               <div id="badge-st-deportes" class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-orange-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">7</div>
-              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center drop-shadow">Pistas Deportivas</span>
+              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center">Pistas Deportivas</span>
             </button>
             <button onclick="handleStationClick('comedor')" class="group flex flex-col items-center gap-1.5 focus:outline-none">
               <div id="badge-st-comedor" class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-red-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">8</div>
-              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center drop-shadow">Comedor Escolar</span>
+              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center">Comedor Escolar</span>
             </button>
           </div>
         </div>
 
-        <!-- Fila Inferior: Zona de Servicios y Dirección -->
+        <!-- Fila Inferior -->
         <div class="relative bg-slate-950/80 backdrop-blur-sm border-2 border-purple-500/80 rounded-2xl p-4 md:p-6 shadow-2xl z-10 mt-4">
           <span class="absolute -top-3 left-4 bg-purple-950 text-purple-300 border border-purple-400 font-extrabold text-[11px] px-3 py-0.5 rounded-full uppercase tracking-wider shadow">
             🏛️ Zona de Servicios y Dirección
@@ -202,25 +186,25 @@
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 items-center justify-items-center">
             <button onclick="handleStationClick('biblioteca')" class="group flex flex-col items-center gap-1.5 focus:outline-none">
               <div id="badge-st-biblioteca" class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-amber-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">1</div>
-              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center drop-shadow">Biblioteca Escolar</span>
+              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center">Biblioteca Escolar</span>
             </button>
             <button onclick="handleStationClick('sala_profesores')" class="group flex flex-col items-center gap-1.5 focus:outline-none">
               <div id="badge-st-sala_profesores" class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-pink-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">4</div>
-              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center drop-shadow">Sala de Profesores</span>
+              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center">Sala de Profesores</span>
             </button>
             <button onclick="handleStationClick('conserjeria')" class="group flex flex-col items-center gap-1.5 focus:outline-none">
               <div id="badge-st-conserjeria" class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-blue-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">2</div>
-              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center drop-shadow">Conserjería</span>
+              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center">Conserjería</span>
             </button>
             <button onclick="handleStationClick('direccion')" class="group flex flex-col items-center gap-1.5 focus:outline-none">
               <div id="badge-st-direccion" class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-purple-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">3</div>
-              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center drop-shadow">Despacho Dirección</span>
+              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center">Despacho Dirección</span>
             </button>
           </div>
         </div>
 
-        <!-- Ficha de Mía sobre el plano -->
-        <div id="mia-player-token" class="absolute z-30 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none flex flex-col items-center" style="left: 62%; top: 30%;">
+        <!-- MÍA PLAYER TOKEN -->
+        <div id="mia-player-token" class="absolute z-30 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none flex flex-col items-center" style="left: 62%; top: 28%;">
           <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-amber-400 border-4 border-white shadow-2xl flex items-center justify-center text-2xl md:text-3xl animate-bounce">
             👧
           </div>
@@ -229,10 +213,10 @@
 
       </div>
 
-      <!-- CONTROLES DEL DADO -->
+      <!-- CONTROLES DADO -->
       <div class="w-full flex items-center justify-center gap-4 bg-slate-900/90 backdrop-blur-md px-5 py-3 rounded-2xl border-2 border-amber-400/80 shadow-2xl z-20">
         <button id="btn-roll-dice" onclick="rollDice()" class="bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-extrabold px-6 py-2.5 rounded-xl shadow-md transition flex items-center gap-2 text-sm md:text-base">
-          <i id="dice-icon" class="fa-solid fa-dice-five text-xl"></i>
+          <span id="dice-icon" class="text-xl">🎲</span>
           <span>¡TIRAR DADO!</span>
         </button>
         <div id="dice-result" class="text-xs md:text-sm font-bold text-slate-300">
@@ -245,33 +229,30 @@
     <!-- SIDEBAR PANEL -->
     <aside class="w-full md:w-80 bg-slate-800/90 border border-slate-700 rounded-2xl p-4 flex flex-col gap-4 shadow-xl">
       <h2 class="text-lg font-bold text-amber-400 border-b border-slate-700 pb-2 flex items-center justify-between">
-        <span><i class="fa-solid fa-map-location-dot mr-2"></i>Estaciones del Cole</span>
+        <span>📍 Estaciones del Cole</span>
         <span class="text-xs text-slate-400 font-normal">(8 Zonas)</span>
       </h2>
-      <!-- STATIONS LIST -->
       <div id="stations-list" class="flex-1 flex flex-col gap-2 overflow-y-auto max-h-[420px] pr-1">
       </div>
-      <!-- DIPLOMA BUTTON -->
       <button id="btn-sidebar-diploma" onclick="openDiplomaModal()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 py-2.5 text-xs font-extrabold rounded-lg shadow-md transition flex items-center justify-center gap-2 hidden">
-        <i class="fa-solid fa-award text-base"></i> Ver Mi Diploma Oficial
+        <span>🎓</span> Ver Mi Diploma Oficial
       </button>
-      <!-- RESET PROGRESS BUTTON -->
       <button onclick="resetGameProgress()" class="mt-auto w-full bg-slate-700/60 hover:bg-slate-700 text-slate-300 hover:text-white py-2 text-xs font-semibold rounded-lg border border-slate-600 transition">
-        <i class="fa-solid fa-rotate-left mr-1"></i> Reiniciar Progreso
+        🔄 Reiniciar Progreso
       </button>
     </aside>
   </main>
 
-  <!-- MODAL FOR STATIONS & QUIZZES -->
+  <!-- MODAL ESTACIÓN -->
   <div id="modal-station" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-slate-900 border border-indigo-500/50 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative animate-fade-in flex flex-col gap-4 max-h-[90vh] overflow-y-auto">
       
       <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
-        <i class="fa-solid fa-xmark"></i>
+        ✕
       </button>
       <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
         <div id="modal-icon-bg" class="w-12 h-12 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center text-2xl font-bold shadow-lg">
-          <i id="modal-icon" class="fa-solid fa-book-open"></i>
+          <span id="modal-icon">📖</span>
         </div>
         <div>
           <h3 id="modal-title" class="text-xl font-bold text-white">Estación</h3>
@@ -288,14 +269,13 @@
       <div id="modal-footer-nav" class="hidden flex justify-between items-center gap-2 pt-2 border-t border-slate-800">
         <span id="question-tracker" class="text-xs text-slate-400 font-medium">Pregunta 1 de 3</span>
         <button id="btn-next-question" onclick="nextQuestion()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 disabled:opacity-50" disabled>
-          <span>Siguiente Pregunta</span>
-          <i class="fa-solid fa-arrow-right"></i>
+          <span>Siguiente Pregunta ➡️</span>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- VICTORY FINAL MODAL -->
+  <!-- MODAL VICTORIA -->
   <div id="modal-victory" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-gradient-to-b from-indigo-900 via-slate-900 to-slate-950 border-2 border-amber-400 rounded-3xl max-w-md w-full p-8 shadow-2xl text-center flex flex-col items-center gap-5">
       <div class="w-24 h-24 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-5xl shadow-xl animate-bounce">
@@ -309,23 +289,22 @@
         Has completado la gran ruta conmemorativa del <strong>50º Aniversario del CEIP Gabriela Mistral de Cartagena</strong>. ¡Ya puedes conseguir tu diploma oficial!
       </p>
       <button onclick="closeVictoryModal(); openDiplomaModal();" class="w-full py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-lg rounded-xl shadow-lg transition flex items-center justify-center gap-2">
-        <i class="fa-solid fa-graduation-cap"></i> ¡GENERAR MI DIPLOMA!
+        🎓 ¡GENERAR MI DIPLOMA!
       </button>
     </div>
   </div>
 
-  <!-- DIPLOMA MODAL & PRINTABLE AREA -->
+  <!-- DIPLOMA MODAL -->
   <div id="modal-diploma" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-slate-900 border border-amber-500/50 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative flex flex-col gap-4 max-h-[90vh] overflow-y-auto">
       
       <button onclick="closeDiplomaModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl no-print">
-        <i class="fa-solid fa-xmark"></i>
+        ✕
       </button>
 
-      <!-- INPUT FORM -->
       <div class="no-print bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col gap-3">
         <h3 class="text-amber-400 font-bold text-sm flex items-center gap-2">
-          <i class="fa-solid fa-pen-to-square"></i> Personaliza tu Diploma del 50º Aniversario
+          ✏️ Personaliza tu Diploma del 50º Aniversario
         </h3>
         <div class="flex gap-2">
           <input type="text" id="student-name-input" placeholder="Escribe aquí tu nombre completo..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-400">
@@ -335,7 +314,6 @@
         </div>
       </div>
 
-      <!-- PRINTABLE DIPLOMA FRAME -->
       <div id="diploma-printable" class="bg-amber-50 text-slate-900 p-8 rounded-xl border-8 border-double border-amber-600 shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
         
         <div class="absolute top-2 left-2 text-amber-700 text-2xl">🏛️</div>
@@ -373,10 +351,9 @@
         </div>
       </div>
 
-      <!-- ACTION BUTTONS -->
       <div class="no-print flex gap-3 pt-2">
         <button onclick="window.print()" class="flex-1 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-xl shadow transition flex items-center justify-center gap-2">
-          <i class="fa-solid fa-print"></i> Imprimir / Guardar en PDF
+          🖨️ Imprimir / Guardar en PDF
         </button>
         <button onclick="closeDiplomaModal()" class="px-5 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition">
           Cerrar
@@ -393,7 +370,7 @@
         id: 'biblioteca',
         title: 'Biblioteca Escolar',
         subtitle: 'Historias y Lectura',
-        icon: 'fa-book-bookmark',
+        icon: '📚',
         color: '#f59e0b',
         posX: '12%', posY: '72%',
         desc: 'Espacio lleno de fantasía, libros y teatro. A lo largo de los años ha contado con la dedicación de maestras fundamentales para impulsar la lectura en el centro.',
@@ -419,7 +396,7 @@
         id: 'sala_profesores',
         title: 'Sala de Profesores',
         subtitle: 'El Claustro de Maestros',
-        icon: 'fa-chalkboard-user',
+        icon: '👩‍🏫',
         color: '#ec4899',
         posX: '37%', posY: '72%',
         desc: 'El punto de encuentro de los docentes donde se planifica la enseñanza y proyectos para todos los cursos.',
@@ -445,7 +422,7 @@
         id: 'conserjeria',
         title: 'Conserjería',
         subtitle: 'Atención y Bienvenida',
-        icon: 'fa-door-open',
+        icon: '🔑',
         color: '#3b82f6',
         posX: '62%', posY: '72%',
         desc: 'El primer rostro amable que te da la bienvenida al centro. Un pilar fundamental para el funcionamiento diario del colegio.',
@@ -471,7 +448,7 @@
         id: 'direccion',
         title: 'Despacho de Dirección',
         subtitle: 'Equipo Directivo e Historia',
-        icon: 'fa-user-tie',
+        icon: '💼',
         color: '#8b5cf6',
         posX: '87%', posY: '72%',
         desc: 'Desde aquí se lidera la labor docente de nuestro centro. Un espacio con mucha historia desde la fundación del colegio.',
@@ -497,7 +474,7 @@
         id: 'aula_abierta',
         title: 'Aula Abierta',
         subtitle: 'Inclusión y Diversidad',
-        icon: 'fa-heart',
+        icon: '❤️',
         color: '#10b981',
         posX: '12%', posY: '28%',
         desc: 'Proyecto pionero de inclusión en Cartagena que comenzó con muchísima ilusión y solo 5 alumnos.',
@@ -523,7 +500,7 @@
         id: 'aula_futuro',
         title: 'Aula de Informática y Futuro',
         subtitle: 'Tecnología e Innovación',
-        icon: 'fa-laptop-code',
+        icon: '💻',
         color: '#06b6d4',
         posX: '37%', posY: '28%',
         desc: 'Espacio dedicado a las nuevas tecnologías y la informática desde hace décadas en nuestro colegio.',
@@ -549,7 +526,7 @@
         id: 'deportes',
         title: 'Pistas Deportivas',
         subtitle: 'Deporte, Salud y Juego',
-        icon: 'fa-volleyball',
+        icon: '⚽',
         color: '#f97316',
         posX: '62%', posY: '28%',
         desc: 'Lugar de diversión, trabajo en equipo y partidos inolvidables con nuestros profesores de Educación Física.',
@@ -575,7 +552,7 @@
         id: 'comedor',
         title: 'Comedor Escolar',
         subtitle: 'Hábitos Saludables y Convivencia',
-        icon: 'fa-utensils',
+        icon: '🍽️',
         color: '#ef4444',
         posX: '87%', posY: '28%',
         desc: 'Un espacio moderno inaugurado recientemente para garantizar una alimentación sana y equilibrada a todo el alumnado.',
@@ -681,17 +658,14 @@
 
     function updateSoundUI() {
       const text = document.getElementById('text-sound');
-      const icon = document.getElementById('icon-sound');
       if (isSoundOn) {
-        text.innerText = 'Audio: ON';
-        icon.className = 'fa-solid fa-volume-high text-emerald-400';
+        text.innerText = '🔊 Audio: ON';
       } else {
-        text.innerText = 'Audio: Mute';
-        icon.className = 'fa-solid fa-volume-xmark text-slate-400';
+        text.innerText = '🔇 Audio: Mute';
       }
     }
 
-    const diceIcons = ['fa-dice-one', 'fa-dice-two', 'fa-dice-three', 'fa-dice-four', 'fa-dice-five', 'fa-dice-six'];
+    const diceIcons = ['🎲', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 
     function rollDice() {
       const btn = document.getElementById('btn-roll-dice');
@@ -705,14 +679,14 @@
       let rolls = 0;
       const interval = setInterval(() => {
         const tempIndex = Math.floor(Math.random() * stations.length);
-        icon.className = `fa-solid ${diceIcons[tempIndex % 6]} text-xl rolling`;
+        icon.innerText = diceIcons[(tempIndex % 6) + 1];
         rolls++;
         if (rolls > 10) {
           clearInterval(interval);
           icon.classList.remove('rolling');
           const randomIndex = Math.floor(Math.random() * stations.length);
           const chosenStation = stations[randomIndex];
-          icon.className = `fa-solid ${diceIcons[randomIndex % 6]} text-xl`;
+          icon.innerText = diceIcons[(randomIndex % 6) + 1];
           resultText.innerText = `¡Mía va a: ${chosenStation.title}!`;
           moveMiaToStation(chosenStation);
           btn.disabled = false;
@@ -734,7 +708,7 @@
         card.innerHTML = `
           <div class="flex items-center gap-3">
             <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold shadow ${isUnlocked ? 'bg-emerald-500 text-slate-950' : 'bg-slate-700 text-slate-200'}">
-              <i class="fa-solid ${st.icon}"></i>
+              ${st.icon}
             </div>
             <div>
               <p class="text-xs font-bold leading-tight">${st.title}</p>
@@ -742,7 +716,7 @@
             </div>
           </div>
           <div>
-            ${isUnlocked ? '<span class="text-xs text-emerald-400 font-extrabold flex items-center gap-1"><i class="fa-solid fa-medal"></i> Ganada</span>' : '<span class="text-[10px] bg-slate-800 px-2 py-1 rounded text-slate-400 border border-slate-700">Pendiente</span>'}
+            ${isUnlocked ? '<span class="text-xs text-emerald-400 font-extrabold flex items-center gap-1">🏅 Ganada</span>' : '<span class="text-[10px] bg-slate-800 px-2 py-1 rounded text-slate-400 border border-slate-700">Pendiente</span>'}
           </div>
         `;
         listEl.appendChild(card);
@@ -750,8 +724,7 @@
         const boardBadge = document.getElementById(`badge-st-${st.id}`);
         if (boardBadge) {
           if (isUnlocked) {
-            boardBadge.classList.remove('bg-amber-500', 'bg-cyan-500', 'bg-orange-500', 'bg-red-500', 'bg-pink-500', 'bg-blue-500', 'bg-purple-500');
-            boardBadge.classList.add('bg-emerald-500');
+            boardBadge.className = "w-12 h-12 md:w-14 md:h-14 rounded-full bg-emerald-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition";
             boardBadge.innerHTML = '✓';
           }
         }
@@ -773,7 +746,7 @@
       document.getElementById('modal-title').innerText = st.title;
       document.getElementById('modal-subtitle').innerText = `Insignia: ${st.subtitle}`;
       document.getElementById('modal-description').innerText = st.desc;
-      document.getElementById('modal-icon').className = `fa-solid ${st.icon}`;
+      document.getElementById('modal-icon').innerText = st.icon;
       document.getElementById('modal-feedback').className = 'hidden text-sm font-semibold p-3 rounded-xl text-center';
       
       loadQuizQuestion();
@@ -815,10 +788,10 @@
       const optsDiv = document.createElement('div');
       optsDiv.className = 'flex flex-col gap-2';
 
-      currentQuizPrepared.options.forEach((optObj, optIdx) => {
+      currentQuizPrepared.options.forEach((optObj) => {
         const btn = document.createElement('button');
         btn.className = 'w-full text-left p-3 rounded-xl bg-slate-800 hover:bg-indigo-900/60 border border-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-between group option-btn';
-        btn.innerHTML = `<span>${optObj.text}</span><i class="fa-regular fa-circle text-slate-500 group-hover:text-amber-400"></i>`;
+        btn.innerHTML = `<span>${optObj.text}</span><span>⚪</span>`;
         btn.onclick = () => checkAnswer(optObj.isCorrect, btn);
         optsDiv.appendChild(btn);
       });
@@ -827,7 +800,7 @@
       if (currentStation.quizzes.length > 1) {
         footerNav.classList.remove('hidden');
         document.getElementById('question-tracker').innerText = `Pregunta ${currentQuizIndex + 1} de ${currentStation.quizzes.length}`;
-        nextBtn.innerHTML = (currentQuizIndex + 1 === currentStation.quizzes.length) ? '<span>Finalizar Reto</span> <i class="fa-solid fa-check"></i>' : '<span>Siguiente Pregunta</span> <i class="fa-solid fa-arrow-right"></i>';
+        nextBtn.innerHTML = (currentQuizIndex + 1 === currentStation.quizzes.length) ? '<span>Finalizar Reto ✔️</span>' : '<span>Siguiente Pregunta ➡️</span>';
       } else {
         footerNav.classList.add('hidden');
       }
