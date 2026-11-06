@@ -32,15 +32,6 @@
       background: #94a3b8;
       border-radius: 4px;
     }
-    #confetti-canvas {
-      pointer-events: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 99;
-    }
     @keyframes roll {
       0% { transform: rotate(0deg) scale(0.8); }
       50% { transform: rotate(180deg) scale(1.2); }
@@ -50,9 +41,18 @@
       animation: roll 0.6s ease-in-out;
     }
 
-    /* Animación suave para la ficha de Mía */
-    #mia-token {
-      transition: left 0.8s ease-in-out, top 0.8s ease-in-out;
+    #mia-player-token {
+      transition: left 0.6s ease-in-out, top 0.6s ease-in-out;
+    }
+
+    /* Fondo ilustrado del plano escolar */
+    .school-map-bg {
+      background-color: #0f172a;
+      background-image: 
+        radial-gradient(#1e293b 2px, transparent 2px),
+        linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 32px 32px, 20px 20px, 20px 20px;
     }
 
     @media print {
@@ -137,63 +137,105 @@
 
   <!-- MAIN GAME AREA -->
   <main class="flex-1 flex flex-col md:flex-row p-3 md:p-5 gap-4 w-full">
-    <!-- MAP CONTAINER WITH VECTOR SVG -->
-    <div class="flex-1 bg-slate-950 rounded-2xl border border-slate-800 shadow-2xl relative flex flex-col items-center justify-center p-2 min-h-[480px] overflow-hidden">
+    <!-- BOARD CONTAINER -->
+    <div class="flex-1 bg-slate-950 rounded-2xl border border-slate-800 shadow-2xl relative flex flex-col items-center justify-between p-4 min-h-[500px] overflow-hidden">
       
-      <!-- Interactive SVG Map -->
-      <div id="map-wrapper" class="relative w-full h-full min-h-[440px] flex items-center justify-center">
-        <svg id="gameMapSVG" class="w-full h-full max-h-[70vh] rounded-xl bg-slate-950 border border-slate-800" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet">
-          <!-- Grid Background Lines -->
-          <defs>
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="1"/>
-            </pattern>
-          </defs>
-          <rect width="1000" height="600" fill="url(#grid)" />
+      <!-- Banner Superior -->
+      <div class="w-full bg-slate-900/90 border border-emerald-500/40 rounded-xl p-3 text-center shadow-lg z-10">
+        <h2 class="text-amber-400 font-extrabold text-lg md:text-xl font-heading">CEIP GABRIELA MISTRAL - PLANO DE RUTAS</h2>
+        <p class="text-slate-300 text-xs mt-0.5">🎉 50º Aniversario - Recorre el colegio con Mía usando el Dado 🎉</p>
+      </div>
 
-          <!-- Header Banner -->
-          <rect x="60" y="15" width="880" height="80" rx="15" fill="rgba(16, 185, 129, 0.12)" stroke="#10b981" stroke-width="2"/>
-          <text x="500" y="48" fill="#f59e0b" font-size="22" font-weight="bold" font-family="Fredoka, sans-serif" text-anchor="middle">CEIP GABRIELA MISTRAL - PLANO DE RUTAS</text>
-          <text x="500" y="75" fill="#94a3b8" font-size="14" font-family="Quicksand, sans-serif" text-anchor="middle">🎉 50º Aniversario - Recorre el colegio con Mía usando el Dado 🎉</text>
-
-          <!-- Zone Containers -->
-          <!-- Upper Row (Zones 5, 6, 7, 8) -->
-          <rect x="60" y="120" width="880" height="200" rx="20" fill="rgba(30, 41, 59, 0.8)" stroke="#38bdf8" stroke-width="3"/>
-          <text x="80" y="145" fill="#38bdf8" font-size="12" font-weight="bold" font-family="Fredoka, sans-serif">ZONA DE AULAS Y DEPORTES</text>
-
-          <!-- Lower Row (Zones 1, 4, 2, 3) -->
-          <rect x="60" y="350" width="880" height="200" rx="20" fill="rgba(30, 41, 59, 0.8)" stroke="#8b5cf6" stroke-width="3"/>
-          <text x="80" y="375" fill="#c084fc" font-size="12" font-weight="bold" font-family="Fredoka, sans-serif">ZONA DE SERVICIOS Y DIRECCIÓN</text>
-
-          <!-- Connecting Paths -->
-          <path d="M 150 450 L 450 450 L 700 450 L 880 450" fill="none" stroke="#64748b" stroke-width="4" stroke-dasharray="8 6"/>
-          <path d="M 150 220 L 400 220 L 650 220 L 880 220" fill="none" stroke="#64748b" stroke-width="4" stroke-dasharray="8 6"/>
-          <path d="M 650 220 L 700 450" fill="none" stroke="#64748b" stroke-width="4" stroke-dasharray="8 6"/>
-
-          <!-- Dynamic Stations Rendered Here -->
-          <g id="svg-stations-group"></g>
+      <!-- MAPA CON ILUSTRACIÓN DE FONDO -->
+      <div id="board-container" class="relative w-full flex-1 my-4 school-map-bg rounded-2xl border border-slate-700 flex flex-col justify-around p-4 md:p-8 overflow-hidden shadow-2xl">
+        
+        <!-- Ilustración de Mapa / Colegio de fondo -->
+        <svg class="absolute inset-0 w-full h-full opacity-30 pointer-events-none" viewBox="0 0 800 400" preserveAspectRatio="none">
+          <!-- Dibujo del edificio principal -->
+          <rect x="50" y="30" width="700" height="130" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+          <rect x="70" y="50" width="80" height="90" rx="5" fill="#334155"/>
+          <rect x="170" y="50" width="80" height="90" rx="5" fill="#334155"/>
+          <rect x="270" y="50" width="260" height="90" rx="5" fill="#0f172a" stroke="#10b981" stroke-width="1"/>
+          <rect x="550" y="50" width="80" height="90" rx="5" fill="#334155"/>
+          <rect x="650" y="50" width="80" height="90" rx="5" fill="#334155"/>
+          
+          <!-- Dibujo del patio y pistas -->
+          <rect x="50" y="200" width="700" height="170" rx="10" fill="#1e293b" stroke="#a855f7" stroke-width="2"/>
+          <!-- Pistas deportivas pintadas -->
+          <rect x="420" y="220" width="160" height="130" rx="5" fill="rgba(249, 115, 22, 0.2)" stroke="#f97316" stroke-width="2"/>
+          <circle cx="500" cy="285" r="25" fill="none" stroke="#f97316" stroke-width="2"/>
+          
+          <!-- Pasillo conectando ambos edificios -->
+          <rect x="380" y="155" width="40" height="50" fill="#334155" stroke="#94a3b8" stroke-dasharray="4"/>
         </svg>
 
-        <!-- HTML mia avatar overlay positioned dynamically over SVG -->
-        <div id="mia-token" class="absolute z-30 transform -translate-x-1/2 -translate-y-full pointer-events-none flex flex-col items-center" style="left: 65%; top: 38%;">
-          <div class="w-14 h-14 rounded-full bg-amber-400 border-4 border-white shadow-2xl flex items-center justify-center text-3xl animate-bounce">
-            👧
-          </div>
-          <div class="bg-amber-400 text-slate-950 font-black text-[10px] px-2 py-0.5 rounded-full shadow border border-white uppercase -mt-1">
-            Mía
+        <!-- Fila Superior: Zona de Aulas y Deportes -->
+        <div class="relative bg-slate-950/80 backdrop-blur-sm border-2 border-sky-500/80 rounded-2xl p-4 md:p-6 shadow-2xl z-10">
+          <span class="absolute -top-3 left-4 bg-sky-950 text-sky-300 border border-sky-400 font-extrabold text-[11px] px-3 py-0.5 rounded-full uppercase tracking-wider shadow">
+            🏫 Zona de Aulas y Deportes
+          </span>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 items-center justify-items-center">
+            <button onclick="handleStationClick('aula_abierta')" class="group flex flex-col items-center gap-1.5 focus:outline-none">
+              <div id="badge-st-aula_abierta" class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-emerald-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">5</div>
+              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center drop-shadow">Aula Abierta</span>
+            </button>
+            <button onclick="handleStationClick('aula_futuro')" class="group flex flex-col items-center gap-1.5 focus:outline-none">
+              <div id="badge-st-aula_futuro" class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-cyan-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">6</div>
+              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center drop-shadow">Informática y Futuro</span>
+            </button>
+            <button onclick="handleStationClick('deportes')" class="group flex flex-col items-center gap-1.5 focus:outline-none">
+              <div id="badge-st-deportes" class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-orange-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">7</div>
+              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center drop-shadow">Pistas Deportivas</span>
+            </button>
+            <button onclick="handleStationClick('comedor')" class="group flex flex-col items-center gap-1.5 focus:outline-none">
+              <div id="badge-st-comedor" class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-red-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">8</div>
+              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center drop-shadow">Comedor Escolar</span>
+            </button>
           </div>
         </div>
 
-        <canvas id="confetti-canvas"></canvas>
+        <!-- Fila Inferior: Zona de Servicios y Dirección -->
+        <div class="relative bg-slate-950/80 backdrop-blur-sm border-2 border-purple-500/80 rounded-2xl p-4 md:p-6 shadow-2xl z-10 mt-4">
+          <span class="absolute -top-3 left-4 bg-purple-950 text-purple-300 border border-purple-400 font-extrabold text-[11px] px-3 py-0.5 rounded-full uppercase tracking-wider shadow">
+            🏛️ Zona de Servicios y Dirección
+          </span>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 items-center justify-items-center">
+            <button onclick="handleStationClick('biblioteca')" class="group flex flex-col items-center gap-1.5 focus:outline-none">
+              <div id="badge-st-biblioteca" class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-amber-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">1</div>
+              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center drop-shadow">Biblioteca Escolar</span>
+            </button>
+            <button onclick="handleStationClick('sala_profesores')" class="group flex flex-col items-center gap-1.5 focus:outline-none">
+              <div id="badge-st-sala_profesores" class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-pink-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">4</div>
+              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center drop-shadow">Sala de Profesores</span>
+            </button>
+            <button onclick="handleStationClick('conserjeria')" class="group flex flex-col items-center gap-1.5 focus:outline-none">
+              <div id="badge-st-conserjeria" class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-blue-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">2</div>
+              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center drop-shadow">Conserjería</span>
+            </button>
+            <button onclick="handleStationClick('direccion')" class="group flex flex-col items-center gap-1.5 focus:outline-none">
+              <div id="badge-st-direccion" class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-purple-500 text-slate-950 font-black text-lg md:text-xl flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">3</div>
+              <span class="text-xs font-bold text-slate-100 group-hover:text-amber-400 text-center drop-shadow">Despacho Dirección</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Ficha de Mía sobre el plano -->
+        <div id="mia-player-token" class="absolute z-30 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none flex flex-col items-center" style="left: 62%; top: 30%;">
+          <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-amber-400 border-4 border-white shadow-2xl flex items-center justify-center text-2xl md:text-3xl animate-bounce">
+            👧
+          </div>
+          <span class="bg-amber-400 text-slate-950 font-black text-[10px] px-2 py-0.5 rounded-full shadow border border-white uppercase -mt-1">MÍA</span>
+        </div>
+
       </div>
 
-      <!-- DICE CONTROLLER INTERFACE -->
-      <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 flex items-center gap-3 bg-slate-900/90 backdrop-blur-md px-5 py-3 rounded-2xl border-2 border-amber-400/80 shadow-2xl">
-        <button id="btn-roll-dice" onclick="rollDice()" class="bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-extrabold px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2 text-sm md:text-base">
+      <!-- CONTROLES DEL DADO -->
+      <div class="w-full flex items-center justify-center gap-4 bg-slate-900/90 backdrop-blur-md px-5 py-3 rounded-2xl border-2 border-amber-400/80 shadow-2xl z-20">
+        <button id="btn-roll-dice" onclick="rollDice()" class="bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-extrabold px-6 py-2.5 rounded-xl shadow-md transition flex items-center gap-2 text-sm md:text-base">
           <i id="dice-icon" class="fa-solid fa-dice-five text-xl"></i>
           <span>¡TIRAR DADO!</span>
         </button>
-        <div id="dice-result" class="text-xs md:text-sm font-bold text-slate-300 hidden sm:block">
+        <div id="dice-result" class="text-xs md:text-sm font-bold text-slate-300">
           Haz clic para mover a Mía
         </div>
       </div>
@@ -353,7 +395,7 @@
         subtitle: 'Historias y Lectura',
         icon: 'fa-book-bookmark',
         color: '#f59e0b',
-        cx: 150, cy: 450, // Posición vectorial en el SVG
+        posX: '12%', posY: '72%',
         desc: 'Espacio lleno de fantasía, libros y teatro. A lo largo de los años ha contado con la dedicación de maestras fundamentales para impulsar la lectura en el centro.',
         quizzes: [
           {
@@ -374,12 +416,38 @@
         ]
       },
       {
+        id: 'sala_profesores',
+        title: 'Sala de Profesores',
+        subtitle: 'El Claustro de Maestros',
+        icon: 'fa-chalkboard-user',
+        color: '#ec4899',
+        posX: '37%', posY: '72%',
+        desc: 'El punto de encuentro de los docentes donde se planifica la enseñanza y proyectos para todos los cursos.',
+        quizzes: [
+          {
+            question: '¿Cuántos maestros forman actualmente el gran claustro del CEIP Gabriela Mistral?',
+            correctAnswer: '38 maestros',
+            wrongAnswers: ['15 maestros', '45 maestros']
+          },
+          {
+            question: '¿Qué reunión importante realiza el profesorado en la Sala de Profesores para preparar el curso?',
+            correctAnswer: 'Claustros de profesores y reuniones de ciclo',
+            wrongAnswers: ['Competiciones de ajedrez', 'Fiestas de cumpleaños de alumnos']
+          },
+          {
+            question: '¿Qué valor principal promueve el claustro de profesores entre todos los estudiantes?',
+            correctAnswer: 'Respeto, trabajo en equipo y esfuerzo',
+            wrongAnswers: ['Competitividad e individualismo', 'Jugar todo el día sin estudiar']
+          }
+        ]
+      },
+      {
         id: 'conserjeria',
         title: 'Conserjería',
         subtitle: 'Atención y Bienvenida',
         icon: 'fa-door-open',
         color: '#3b82f6',
-        cx: 700, cy: 450,
+        posX: '62%', posY: '72%',
         desc: 'El primer rostro amable que te da la bienvenida al centro. Un pilar fundamental para el funcionamiento diario del colegio.',
         quizzes: [
           {
@@ -405,7 +473,7 @@
         subtitle: 'Equipo Directivo e Historia',
         icon: 'fa-user-tie',
         color: '#8b5cf6',
-        cx: 880, cy: 450,
+        posX: '87%', posY: '72%',
         desc: 'Desde aquí se lidera la labor docente de nuestro centro. Un espacio con mucha historia desde la fundación del colegio.',
         quizzes: [
           {
@@ -426,38 +494,12 @@
         ]
       },
       {
-        id: 'sala_profesores',
-        title: 'Sala de Profesores',
-        subtitle: 'El Claustro de Maestros',
-        icon: 'fa-chalkboard-user',
-        color: '#ec4899',
-        cx: 450, cy: 450,
-        desc: 'El punto de encuentro de los docentes donde se planifica la enseñanza y proyectos para todos los cursos.',
-        quizzes: [
-          {
-            question: '¿Cuántos maestros forman actualmente el gran claustro del CEIP Gabriela Mistral?',
-            correctAnswer: '38 maestros',
-            wrongAnswers: ['15 maestros', '45 maestros']
-          },
-          {
-            question: '¿Qué reunión importante realiza el profesorado en la Sala de Profesores para preparar el curso?',
-            correctAnswer: 'Claustros de profesores y reuniones de ciclo',
-            wrongAnswers: ['Competiciones de ajedrez', 'Fiestas de cumpleaños de alumnos']
-          },
-          {
-            question: '¿Qué valor principal promueve el claustro de profesores entre todos los estudiantes?',
-            correctAnswer: 'Respeto, trabajo en equipo y esfuerzo',
-            wrongAnswers: ['Competitividad e individualismo', 'Jugar todo el día sin estudiar']
-          }
-        ]
-      },
-      {
         id: 'aula_abierta',
         title: 'Aula Abierta',
         subtitle: 'Inclusión y Diversidad',
         icon: 'fa-heart',
         color: '#10b981',
-        cx: 150, cy: 220,
+        posX: '12%', posY: '28%',
         desc: 'Proyecto pionero de inclusión en Cartagena que comenzó con muchísima ilusión y solo 5 alumnos.',
         quizzes: [
           {
@@ -483,7 +525,7 @@
         subtitle: 'Tecnología e Innovación',
         icon: 'fa-laptop-code',
         color: '#06b6d4',
-        cx: 400, cy: 220,
+        posX: '37%', posY: '28%',
         desc: 'Espacio dedicado a las nuevas tecnologías y la informática desde hace décadas en nuestro colegio.',
         quizzes: [
           {
@@ -509,7 +551,7 @@
         subtitle: 'Deporte, Salud y Juego',
         icon: 'fa-volleyball',
         color: '#f97316',
-        cx: 650, cy: 220,
+        posX: '62%', posY: '28%',
         desc: 'Lugar de diversión, trabajo en equipo y partidos inolvidables con nuestros profesores de Educación Física.',
         quizzes: [
           {
@@ -535,7 +577,7 @@
         subtitle: 'Hábitos Saludables y Convivencia',
         icon: 'fa-utensils',
         color: '#ef4444',
-        cx: 880, cy: 220,
+        posX: '87%', posY: '28%',
         desc: 'Un espacio moderno inaugurado recientemente para garantizar una alimentación sana y equilibrada a todo el alumnado.',
         quizzes: [
           {
@@ -565,63 +607,19 @@
     let currentQuizIndex = 0;
     let currentQuizPrepared = null;
 
-    function renderSVGStations() {
-      const group = document.getElementById('svg-stations-group');
-      group.innerHTML = '';
-
-      stations.forEach((st, idx) => {
-        const isUnlocked = unlockedBadges.includes(st.id);
-        
-        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        g.setAttribute('class', 'cursor-pointer');
-        g.onclick = () => { moveMiaToStation(st); openStationModal(st); };
-
-        // Station Circle
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', st.cx);
-        circle.setAttribute('cy', st.cy);
-        circle.setAttribute('r', '22');
-        circle.setAttribute('fill', isUnlocked ? '#10b981' : st.color);
-        circle.setAttribute('stroke', '#ffffff');
-        circle.setAttribute('stroke-width', '3');
-        circle.setAttribute('filter', 'drop-shadow(0px 4px 6px rgba(0,0,0,0.4))');
-
-        // Text Number or Checkmark
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', st.cx);
-        text.setAttribute('y', st.cy + 6);
-        text.setAttribute('fill', '#ffffff');
-        text.setAttribute('font-size', '16');
-        text.setAttribute('font-weight', 'bold');
-        text.setAttribute('font-family', 'Fredoka, sans-serif');
-        text.setAttribute('text-anchor', 'middle');
-        text.textContent = isUnlocked ? '✓' : (idx + 1).toString();
-
-        // Station Label below
-        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        label.setAttribute('x', st.cx);
-        label.setAttribute('y', st.cy + 42);
-        label.setAttribute('fill', '#ffffff');
-        label.setAttribute('font-size', '12');
-        label.setAttribute('font-weight', 'bold');
-        label.setAttribute('font-family', 'Fredoka, sans-serif');
-        label.setAttribute('text-anchor', 'middle');
-        label.textContent = st.title;
-
-        g.appendChild(circle);
-        g.appendChild(text);
-        g.appendChild(label);
-        group.appendChild(g);
-      });
+    function moveMiaToStation(st) {
+      const miaToken = document.getElementById('mia-player-token');
+      miaToken.style.left = st.posX;
+      miaToken.style.top = st.posY;
     }
 
-    function moveMiaToStation(st) {
-      const miaToken = document.getElementById('mia-token');
-      // Convert SVG coordinates (1000x600) to %
-      const posX = (st.cx / 1000) * 100;
-      const posY = (st.cy / 600) * 100;
-      miaToken.style.left = `${posX}%`;
-      miaToken.style.top = `${posY}%`;
+    function handleStationClick(stationId) {
+      const st = stations.find(s => s.id === stationId);
+      if (st) {
+        moveMiaToStation(st);
+        openStationModal(st);
+        playSynthSound('click');
+      }
     }
 
     function playSynthSound(type) {
@@ -718,7 +716,7 @@
           resultText.innerText = `¡Mía va a: ${chosenStation.title}!`;
           moveMiaToStation(chosenStation);
           btn.disabled = false;
-          setTimeout(() => { openStationModal(chosenStation); }, 800);
+          setTimeout(() => { openStationModal(chosenStation); }, 700);
         }
       }, 60);
     }
@@ -732,11 +730,7 @@
         card.className = `p-3 rounded-xl border transition cursor-pointer flex items-center justify-between gap-3 ${
           isUnlocked ? 'bg-emerald-950/40 border-emerald-600/60 text-emerald-200 hover:bg-emerald-900/50' : 'bg-slate-900/60 border-slate-700 text-slate-300 hover:bg-slate-800'
         }`;
-        card.onclick = () => {
-          moveMiaToStation(st);
-          openStationModal(st);
-          playSynthSound('click');
-        };
+        card.onclick = () => { handleStationClick(st.id); };
         card.innerHTML = `
           <div class="flex items-center gap-3">
             <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold shadow ${isUnlocked ? 'bg-emerald-500 text-slate-950' : 'bg-slate-700 text-slate-200'}">
@@ -752,6 +746,15 @@
           </div>
         `;
         listEl.appendChild(card);
+
+        const boardBadge = document.getElementById(`badge-st-${st.id}`);
+        if (boardBadge) {
+          if (isUnlocked) {
+            boardBadge.classList.remove('bg-amber-500', 'bg-cyan-500', 'bg-orange-500', 'bg-red-500', 'bg-pink-500', 'bg-blue-500', 'bg-purple-500');
+            boardBadge.classList.add('bg-emerald-500');
+            boardBadge.innerHTML = '✓';
+          }
+        }
       });
       
       document.getElementById('badge-count-text').innerText = `${unlockedBadges.length} / ${stations.length}`;
@@ -762,7 +765,6 @@
       } else {
         diplomaBtn.classList.add('hidden');
       }
-      renderSVGStations();
     }
 
     function openStationModal(st) {
