@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -300,7 +301,6 @@
 
   <!-- JAVASCRIPT GAME ENGINE -->
   <script>
-    // DATOS DE PREGUNTAS ACTUALIZADOS SEGÚN EL DOCUMENTO
     const stations = [
       {
         id: 'biblioteca',
@@ -529,7 +529,7 @@
 
     let currentStation = null;
     let currentQuizIndex = 0;
-    let currentQuizPrepared = null; // Almacenará las opciones mezcladas
+    let currentQuizPrepared = null;
 
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -842,7 +842,6 @@
       document.getElementById('modal-station').classList.remove('hidden');
     }
 
-    // FUNCIÓN PARA MEZCLAR ALEATORIAMENTE LAS OPCIONES
     function shuffleArray(array) {
       const arr = [...array];
       for (let i = arr.length - 1; i > 0; i--) {
@@ -858,12 +857,11 @@
       const nextBtn = document.getElementById('btn-next-question');
       
       document.getElementById('modal-feedback').classList.add('hidden');
-      nextBtn.disabled = true; // Deshabilitado hasta responder correctamente
+      nextBtn.disabled = true;
       qContainer.innerHTML = '';
 
       const rawQuiz = currentStation.quizzes[currentQuizIndex];
 
-      // Preparamos las opciones de forma aleatoria sin cambiar siempre la primera
       const allOptions = [
         { text: rawQuiz.correctAnswer, isCorrect: true },
         ...rawQuiz.wrongAnswers.map(ans => ({ text: ans, isCorrect: false }))
@@ -905,9 +903,8 @@
         playSynthSound('success');
         feedback.className = 'text-sm font-semibold p-3 rounded-xl text-center bg-emerald-900/80 border border-emerald-500 text-emerald-200';
         feedback.innerText = '¡Correcto! 🎉 Excelente respuesta.';
-        nextBtn.disabled = false; // Habilitar avance
+        nextBtn.disabled = false;
 
-        // Si es la última pregunta del bloque, otorgar la insignia
         if (currentQuizIndex + 1 === currentStation.quizzes.length) {
           if (!unlockedBadges.includes(currentStation.id)) {
             unlockedBadges.push(currentStation.id);
