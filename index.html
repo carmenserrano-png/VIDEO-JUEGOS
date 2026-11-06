@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -132,13 +131,13 @@
   </header>
 
   <!-- MAIN GAME AREA -->
-  <main class="flex-1 flex flex-col md:flex-row p-3 md:p-5 gap-4 max-w-7xl mx-auto w-full">
+  <main class="flex-1 flex flex-col md:flex-row p-3 md:p-5 gap-4 w-full">
     <!-- GAME CANVAS CONTAINER -->
-    <div class="flex-1 bg-slate-950 rounded-2xl border border-slate-800 shadow-2xl relative flex flex-col items-center justify-center p-2 min-h-[450px] overflow-hidden">
+    <div class="flex-1 bg-slate-950 rounded-2xl border border-slate-800 shadow-2xl relative flex flex-col items-center justify-center p-2 min-h-[500px] overflow-hidden">
       
       <!-- Canvas Layer -->
-      <div id="canvas-wrapper" class="relative w-full h-full flex items-center justify-center min-h-[420px] max-h-[75vh]">
-        <canvas id="gameCanvas" class="rounded-xl shadow-inner max-w-full max-h-full object-contain"></canvas>
+      <div id="canvas-wrapper" class="relative w-full h-full flex items-center justify-center min-h-[480px]">
+        <canvas id="gameCanvas" class="rounded-xl shadow-inner w-full h-full object-contain"></canvas>
         <canvas id="confetti-canvas"></canvas>
       </div>
 
@@ -162,7 +161,7 @@
         <span class="text-xs text-slate-400 font-normal">(8 Zonas)</span>
       </h2>
       <!-- STATIONS LIST -->
-      <div id="stations-list" class="flex-1 flex flex-col gap-2 overflow-y-auto max-h-[380px] pr-1">
+      <div id="stations-list" class="flex-1 flex flex-col gap-2 overflow-y-auto max-h-[420px] pr-1">
       </div>
       <!-- DIPLOMA BUTTON -->
       <button id="btn-sidebar-diploma" onclick="openDiplomaModal()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 py-2.5 text-xs font-extrabold rounded-lg shadow-md transition flex items-center justify-center gap-2 hidden">
@@ -308,7 +307,7 @@
         subtitle: 'Historias y Lectura',
         icon: 'fa-book-bookmark',
         color: '#f59e0b',
-        rx: 0.45, ry: 0.82,
+        rx: 0.35, ry: 0.70,
         desc: 'Espacio lleno de fantasía, libros y teatro. A lo largo de los años ha contado con la dedicación de maestras fundamentales para impulsar la lectura en el centro.',
         quizzes: [
           {
@@ -334,7 +333,7 @@
         subtitle: 'Atención y Bienvenida',
         icon: 'fa-door-open',
         color: '#3b82f6',
-        rx: 0.74, ry: 0.78,
+        rx: 0.60, ry: 0.70,
         desc: 'El primer rostro amable que te da la bienvenida al centro. Un pilar fundamental para el funcionamiento diario del colegio.',
         quizzes: [
           {
@@ -360,7 +359,7 @@
         subtitle: 'Equipo Directivo e Historia',
         icon: 'fa-user-tie',
         color: '#8b5cf6',
-        rx: 0.90, ry: 0.84,
+        rx: 0.85, ry: 0.70,
         desc: 'Desde aquí se lidera la labor docente de nuestro centro. Un espacio con mucha historia desde la fundación del colegio.',
         quizzes: [
           {
@@ -386,7 +385,7 @@
         subtitle: 'El Claustro de Maestros',
         icon: 'fa-chalkboard-user',
         color: '#ec4899',
-        rx: 0.58, ry: 0.82,
+        rx: 0.48, ry: 0.70,
         desc: 'El punto de encuentro de los docentes donde se planifica la enseñanza y proyectos para todos los cursos.',
         quizzes: [
           {
@@ -412,7 +411,7 @@
         subtitle: 'Inclusión y Diversidad',
         icon: 'fa-heart',
         color: '#10b981',
-        rx: 0.15, ry: 0.42,
+        rx: 0.15, ry: 0.35,
         desc: 'Proyecto pionero de inclusión en Cartagena que comenzó con muchísima ilusión y solo 5 alumnos.',
         quizzes: [
           {
@@ -438,7 +437,7 @@
         subtitle: 'Tecnología e Innovación',
         icon: 'fa-laptop-code',
         color: '#06b6d4',
-        rx: 0.45, ry: 0.42,
+        rx: 0.38, ry: 0.35,
         desc: 'Espacio dedicado a las nuevas tecnologías y la informática desde hace décadas en nuestro colegio.',
         quizzes: [
           {
@@ -464,7 +463,7 @@
         subtitle: 'Deporte, Salud y Juego',
         icon: 'fa-volleyball',
         color: '#f97316',
-        rx: 0.58, ry: 0.52,
+        rx: 0.62, ry: 0.38,
         desc: 'Lugar de diversión, trabajo en equipo y partidos inolvidables con nuestros profesores de Educación Física.',
         quizzes: [
           {
@@ -490,7 +489,7 @@
         subtitle: 'Hábitos Saludables y Convivencia',
         icon: 'fa-utensils',
         color: '#ef4444',
-        rx: 0.80, ry: 0.50,
+        rx: 0.85, ry: 0.35,
         desc: 'Un espacio moderno inaugurado recientemente para garantizar una alimentación sana y equilibrada a todo el alumnado.',
         quizzes: [
           {
@@ -515,10 +514,10 @@
     let unlockedBadges = JSON.parse(localStorage.getItem('gabriela_unlocked_badges')) || [];
     let isSoundOn = localStorage.getItem('gabriela_sound_on') !== 'false';
     
-    let miaX = 0.65;
-    let miaY = 0.70;
-    let targetX = 0.65;
-    let targetY = 0.70;
+    let miaX = 0.62;
+    let miaY = 0.38;
+    let targetX = 0.62;
+    let targetY = 0.38;
     let miaSpeed = 0.015;
 
     let mapImage = new Image();
@@ -610,33 +609,33 @@
     function createDefaultMapTexture() {
       const tempCanvas = document.createElement('canvas');
       tempCanvas.width = 1000;
-      tempCanvas.height = 650;
+      tempCanvas.height = 600;
       const tCtx = tempCanvas.getContext('2d');
       tCtx.fillStyle = '#0f172a';
-      tCtx.fillRect(0, 0, 1000, 650);
+      tCtx.fillRect(0, 0, 1000, 600);
       tCtx.strokeStyle = '#1e293b';
       tCtx.lineWidth = 1;
       for (let x = 0; x < 1000; x += 40) {
-        tCtx.beginPath(); tCtx.moveTo(x, 0); tCtx.lineTo(x, 650); tCtx.stroke();
+        tCtx.beginPath(); tCtx.moveTo(x, 0); tCtx.lineTo(x, 600); tCtx.stroke();
       }
-      for (let y = 0; y < 650; y += 40) {
+      for (let y = 0; y < 600; y += 40) {
         tCtx.beginPath(); tCtx.moveTo(0, y); tCtx.lineTo(1000, y); tCtx.stroke();
       }
       tCtx.fillStyle = 'rgba(30, 41, 59, 0.9)';
       tCtx.strokeStyle = '#38bdf8';
       tCtx.lineWidth = 4;
-      tCtx.fillRect(100, 450, 830, 160); tCtx.strokeRect(100, 450, 830, 160);
-      tCtx.fillRect(100, 180, 750, 220); tCtx.strokeRect(100, 180, 750, 220);
+      tCtx.fillRect(80, 360, 840, 180); tCtx.strokeRect(80, 360, 840, 180);
+      tCtx.fillRect(80, 140, 840, 180); tCtx.strokeRect(80, 140, 840, 180);
       tCtx.fillStyle = 'rgba(16, 185, 129, 0.15)';
-      tCtx.fillRect(100, 20, 750, 140);
+      tCtx.fillRect(80, 20, 840, 100);
       tCtx.strokeStyle = '#10b981';
-      tCtx.strokeRect(100, 20, 750, 140);
+      tCtx.strokeRect(80, 20, 840, 100);
       tCtx.fillStyle = '#f59e0b';
       tCtx.font = 'bold 22px Fredoka, sans-serif';
-      tCtx.fillText('CEIP GABRIELA MISTRAL - PLANO DE RUTAS', 260, 50);
+      tCtx.fillText('CEIP GABRIELA MISTRAL - PLANO DE RUTAS', 260, 55);
       tCtx.fillStyle = '#94a3b8';
       tCtx.font = '14px Quicksand, sans-serif';
-      tCtx.fillText('🎉 50º Aniversario - Recorre el colegio con Mía usando el Dado 🎉', 240, 80);
+      tCtx.fillText('🎉 50º Aniversario - Recorre el colegio con Mía usando el Dado 🎉', 240, 85);
       mapImage.src = tempCanvas.toDataURL();
       mapImage.onload = () => { isMapLoaded = true; resizeCanvas(); };
     }
@@ -666,15 +665,8 @@
     function resizeCanvas() {
       const containerWidth = wrapper.clientWidth;
       const containerHeight = wrapper.clientHeight || 500;
-      let aspect = 1000 / 650;
-      let targetW = containerWidth;
-      let targetH = containerWidth / aspect;
-      if (targetH > containerHeight) {
-        targetH = containerHeight;
-        targetW = containerHeight * aspect;
-      }
-      canvas.width = targetW;
-      canvas.height = targetH;
+      canvas.width = containerWidth;
+      canvas.height = containerHeight;
     }
     window.addEventListener('resize', resizeCanvas);
 
@@ -752,7 +744,7 @@
       ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
       ctx.fill();
 
-      const spriteSize = Math.min(canvas.width, canvas.height) * 0.12;
+      const spriteSize = Math.min(canvas.width, canvas.height) * 0.14;
       if (isMiaLoaded) {
         ctx.drawImage(miaImage, playerPx - spriteSize / 2, playerPy - spriteSize * 0.9, spriteSize, spriteSize);
       }
