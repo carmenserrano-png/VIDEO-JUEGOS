@@ -50,6 +50,11 @@
       animation: roll 0.6s ease-in-out;
     }
 
+    /* Animación suave para la ficha de Mía */
+    #mia-token {
+      transition: left 0.8s ease-in-out, top 0.8s ease-in-out;
+    }
+
     @media print {
       body * {
         visibility: hidden;
@@ -132,12 +137,53 @@
 
   <!-- MAIN GAME AREA -->
   <main class="flex-1 flex flex-col md:flex-row p-3 md:p-5 gap-4 w-full">
-    <!-- GAME CANVAS CONTAINER -->
-    <div class="flex-1 bg-slate-950 rounded-2xl border border-slate-800 shadow-2xl relative flex flex-col items-center justify-center p-2 min-h-[500px] overflow-hidden">
+    <!-- MAP CONTAINER WITH VECTOR SVG -->
+    <div class="flex-1 bg-slate-950 rounded-2xl border border-slate-800 shadow-2xl relative flex flex-col items-center justify-center p-2 min-h-[480px] overflow-hidden">
       
-      <!-- Canvas Layer -->
-      <div id="canvas-wrapper" class="relative w-full h-full flex items-center justify-center min-h-[480px]">
-        <canvas id="gameCanvas" class="rounded-xl shadow-inner w-full h-full object-contain"></canvas>
+      <!-- Interactive SVG Map -->
+      <div id="map-wrapper" class="relative w-full h-full min-h-[440px] flex items-center justify-center">
+        <svg id="gameMapSVG" class="w-full h-full max-h-[70vh] rounded-xl bg-slate-950 border border-slate-800" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet">
+          <!-- Grid Background Lines -->
+          <defs>
+            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect width="1000" height="600" fill="url(#grid)" />
+
+          <!-- Header Banner -->
+          <rect x="60" y="15" width="880" height="80" rx="15" fill="rgba(16, 185, 129, 0.12)" stroke="#10b981" stroke-width="2"/>
+          <text x="500" y="48" fill="#f59e0b" font-size="22" font-weight="bold" font-family="Fredoka, sans-serif" text-anchor="middle">CEIP GABRIELA MISTRAL - PLANO DE RUTAS</text>
+          <text x="500" y="75" fill="#94a3b8" font-size="14" font-family="Quicksand, sans-serif" text-anchor="middle">🎉 50º Aniversario - Recorre el colegio con Mía usando el Dado 🎉</text>
+
+          <!-- Zone Containers -->
+          <!-- Upper Row (Zones 5, 6, 7, 8) -->
+          <rect x="60" y="120" width="880" height="200" rx="20" fill="rgba(30, 41, 59, 0.8)" stroke="#38bdf8" stroke-width="3"/>
+          <text x="80" y="145" fill="#38bdf8" font-size="12" font-weight="bold" font-family="Fredoka, sans-serif">ZONA DE AULAS Y DEPORTES</text>
+
+          <!-- Lower Row (Zones 1, 4, 2, 3) -->
+          <rect x="60" y="350" width="880" height="200" rx="20" fill="rgba(30, 41, 59, 0.8)" stroke="#8b5cf6" stroke-width="3"/>
+          <text x="80" y="375" fill="#c084fc" font-size="12" font-weight="bold" font-family="Fredoka, sans-serif">ZONA DE SERVICIOS Y DIRECCIÓN</text>
+
+          <!-- Connecting Paths -->
+          <path d="M 150 450 L 450 450 L 700 450 L 880 450" fill="none" stroke="#64748b" stroke-width="4" stroke-dasharray="8 6"/>
+          <path d="M 150 220 L 400 220 L 650 220 L 880 220" fill="none" stroke="#64748b" stroke-width="4" stroke-dasharray="8 6"/>
+          <path d="M 650 220 L 700 450" fill="none" stroke="#64748b" stroke-width="4" stroke-dasharray="8 6"/>
+
+          <!-- Dynamic Stations Rendered Here -->
+          <g id="svg-stations-group"></g>
+        </svg>
+
+        <!-- HTML mia avatar overlay positioned dynamically over SVG -->
+        <div id="mia-token" class="absolute z-30 transform -translate-x-1/2 -translate-y-full pointer-events-none flex flex-col items-center" style="left: 65%; top: 38%;">
+          <div class="w-14 h-14 rounded-full bg-amber-400 border-4 border-white shadow-2xl flex items-center justify-center text-3xl animate-bounce">
+            👧
+          </div>
+          <div class="bg-amber-400 text-slate-950 font-black text-[10px] px-2 py-0.5 rounded-full shadow border border-white uppercase -mt-1">
+            Mía
+          </div>
+        </div>
+
         <canvas id="confetti-canvas"></canvas>
       </div>
 
@@ -307,7 +353,7 @@
         subtitle: 'Historias y Lectura',
         icon: 'fa-book-bookmark',
         color: '#f59e0b',
-        rx: 0.35, ry: 0.70,
+        cx: 150, cy: 450, // Posición vectorial en el SVG
         desc: 'Espacio lleno de fantasía, libros y teatro. A lo largo de los años ha contado con la dedicación de maestras fundamentales para impulsar la lectura en el centro.',
         quizzes: [
           {
@@ -333,7 +379,7 @@
         subtitle: 'Atención y Bienvenida',
         icon: 'fa-door-open',
         color: '#3b82f6',
-        rx: 0.60, ry: 0.70,
+        cx: 700, cy: 450,
         desc: 'El primer rostro amable que te da la bienvenida al centro. Un pilar fundamental para el funcionamiento diario del colegio.',
         quizzes: [
           {
@@ -359,7 +405,7 @@
         subtitle: 'Equipo Directivo e Historia',
         icon: 'fa-user-tie',
         color: '#8b5cf6',
-        rx: 0.85, ry: 0.70,
+        cx: 880, cy: 450,
         desc: 'Desde aquí se lidera la labor docente de nuestro centro. Un espacio con mucha historia desde la fundación del colegio.',
         quizzes: [
           {
@@ -385,7 +431,7 @@
         subtitle: 'El Claustro de Maestros',
         icon: 'fa-chalkboard-user',
         color: '#ec4899',
-        rx: 0.48, ry: 0.70,
+        cx: 450, cy: 450,
         desc: 'El punto de encuentro de los docentes donde se planifica la enseñanza y proyectos para todos los cursos.',
         quizzes: [
           {
@@ -411,7 +457,7 @@
         subtitle: 'Inclusión y Diversidad',
         icon: 'fa-heart',
         color: '#10b981',
-        rx: 0.15, ry: 0.35,
+        cx: 150, cy: 220,
         desc: 'Proyecto pionero de inclusión en Cartagena que comenzó con muchísima ilusión y solo 5 alumnos.',
         quizzes: [
           {
@@ -437,7 +483,7 @@
         subtitle: 'Tecnología e Innovación',
         icon: 'fa-laptop-code',
         color: '#06b6d4',
-        rx: 0.38, ry: 0.35,
+        cx: 400, cy: 220,
         desc: 'Espacio dedicado a las nuevas tecnologías y la informática desde hace décadas en nuestro colegio.',
         quizzes: [
           {
@@ -463,7 +509,7 @@
         subtitle: 'Deporte, Salud y Juego',
         icon: 'fa-volleyball',
         color: '#f97316',
-        rx: 0.62, ry: 0.38,
+        cx: 650, cy: 220,
         desc: 'Lugar de diversión, trabajo en equipo y partidos inolvidables con nuestros profesores de Educación Física.',
         quizzes: [
           {
@@ -489,7 +535,7 @@
         subtitle: 'Hábitos Saludables y Convivencia',
         icon: 'fa-utensils',
         color: '#ef4444',
-        rx: 0.85, ry: 0.35,
+        cx: 880, cy: 220,
         desc: 'Un espacio moderno inaugurado recientemente para garantizar una alimentación sana y equilibrada a todo el alumnado.',
         quizzes: [
           {
@@ -513,29 +559,70 @@
 
     let unlockedBadges = JSON.parse(localStorage.getItem('gabriela_unlocked_badges')) || [];
     let isSoundOn = localStorage.getItem('gabriela_sound_on') !== 'false';
-    
-    let miaX = 0.62;
-    let miaY = 0.38;
-    let targetX = 0.62;
-    let targetY = 0.38;
-    let miaSpeed = 0.015;
-
-    let mapImage = new Image();
-    let miaImage = new Image();
-    let isMapLoaded = false;
-    let isMiaLoaded = false;
     let audioCtx = null;
 
     let currentStation = null;
     let currentQuizIndex = 0;
     let currentQuizPrepared = null;
 
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    const wrapper = document.getElementById('canvas-wrapper');
+    function renderSVGStations() {
+      const group = document.getElementById('svg-stations-group');
+      group.innerHTML = '';
 
-    createDefaultMapTexture();
-    createDefaultMiaAvatar();
+      stations.forEach((st, idx) => {
+        const isUnlocked = unlockedBadges.includes(st.id);
+        
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('class', 'cursor-pointer');
+        g.onclick = () => { moveMiaToStation(st); openStationModal(st); };
+
+        // Station Circle
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', st.cx);
+        circle.setAttribute('cy', st.cy);
+        circle.setAttribute('r', '22');
+        circle.setAttribute('fill', isUnlocked ? '#10b981' : st.color);
+        circle.setAttribute('stroke', '#ffffff');
+        circle.setAttribute('stroke-width', '3');
+        circle.setAttribute('filter', 'drop-shadow(0px 4px 6px rgba(0,0,0,0.4))');
+
+        // Text Number or Checkmark
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', st.cx);
+        text.setAttribute('y', st.cy + 6);
+        text.setAttribute('fill', '#ffffff');
+        text.setAttribute('font-size', '16');
+        text.setAttribute('font-weight', 'bold');
+        text.setAttribute('font-family', 'Fredoka, sans-serif');
+        text.setAttribute('text-anchor', 'middle');
+        text.textContent = isUnlocked ? '✓' : (idx + 1).toString();
+
+        // Station Label below
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('x', st.cx);
+        label.setAttribute('y', st.cy + 42);
+        label.setAttribute('fill', '#ffffff');
+        label.setAttribute('font-size', '12');
+        label.setAttribute('font-weight', 'bold');
+        label.setAttribute('font-family', 'Fredoka, sans-serif');
+        label.setAttribute('text-anchor', 'middle');
+        label.textContent = st.title;
+
+        g.appendChild(circle);
+        g.appendChild(text);
+        g.appendChild(label);
+        group.appendChild(g);
+      });
+    }
+
+    function moveMiaToStation(st) {
+      const miaToken = document.getElementById('mia-token');
+      // Convert SVG coordinates (1000x600) to %
+      const posX = (st.cx / 1000) * 100;
+      const posY = (st.cy / 600) * 100;
+      miaToken.style.left = `${posX}%`;
+      miaToken.style.top = `${posY}%`;
+    }
 
     function playSynthSound(type) {
       if (!isSoundOn) return;
@@ -606,151 +693,6 @@
       }
     }
 
-    function createDefaultMapTexture() {
-      const tempCanvas = document.createElement('canvas');
-      tempCanvas.width = 1000;
-      tempCanvas.height = 600;
-      const tCtx = tempCanvas.getContext('2d');
-      tCtx.fillStyle = '#0f172a';
-      tCtx.fillRect(0, 0, 1000, 600);
-      tCtx.strokeStyle = '#1e293b';
-      tCtx.lineWidth = 1;
-      for (let x = 0; x < 1000; x += 40) {
-        tCtx.beginPath(); tCtx.moveTo(x, 0); tCtx.lineTo(x, 600); tCtx.stroke();
-      }
-      for (let y = 0; y < 600; y += 40) {
-        tCtx.beginPath(); tCtx.moveTo(0, y); tCtx.lineTo(1000, y); tCtx.stroke();
-      }
-      tCtx.fillStyle = 'rgba(30, 41, 59, 0.9)';
-      tCtx.strokeStyle = '#38bdf8';
-      tCtx.lineWidth = 4;
-      tCtx.fillRect(80, 360, 840, 180); tCtx.strokeRect(80, 360, 840, 180);
-      tCtx.fillRect(80, 140, 840, 180); tCtx.strokeRect(80, 140, 840, 180);
-      tCtx.fillStyle = 'rgba(16, 185, 129, 0.15)';
-      tCtx.fillRect(80, 20, 840, 100);
-      tCtx.strokeStyle = '#10b981';
-      tCtx.strokeRect(80, 20, 840, 100);
-      tCtx.fillStyle = '#f59e0b';
-      tCtx.font = 'bold 22px Fredoka, sans-serif';
-      tCtx.fillText('CEIP GABRIELA MISTRAL - PLANO DE RUTAS', 260, 55);
-      tCtx.fillStyle = '#94a3b8';
-      tCtx.font = '14px Quicksand, sans-serif';
-      tCtx.fillText('🎉 50º Aniversario - Recorre el colegio con Mía usando el Dado 🎉', 240, 85);
-      mapImage.src = tempCanvas.toDataURL();
-      mapImage.onload = () => { isMapLoaded = true; resizeCanvas(); };
-    }
-
-    function createDefaultMiaAvatar() {
-      const tempCanvas = document.createElement('canvas');
-      tempCanvas.width = 120;
-      tempCanvas.height = 120;
-      const tCtx = tempCanvas.getContext('2d');
-      tCtx.fillStyle = '#f59e0b';
-      tCtx.beginPath(); tCtx.arc(60, 60, 55, 0, Math.PI * 2); tCtx.fill();
-      tCtx.lineWidth = 4; tCtx.strokeStyle = '#ffffff'; tCtx.stroke();
-      tCtx.fillStyle = '#fde047';
-      tCtx.beginPath(); tCtx.arc(60, 45, 40, 0, Math.PI * 2); tCtx.fill();
-      tCtx.fillStyle = '#fed7aa';
-      tCtx.beginPath(); tCtx.arc(60, 55, 28, 0, Math.PI * 2); tCtx.fill();
-      tCtx.fillStyle = '#065f46';
-      tCtx.beginPath(); tCtx.arc(50, 50, 5, 0, Math.PI * 2); tCtx.fill();
-      tCtx.beginPath(); tCtx.arc(70, 50, 5, 0, Math.PI * 2); tCtx.fill();
-      tCtx.strokeStyle = '#9a3412'; tCtx.lineWidth = 3;
-      tCtx.beginPath(); tCtx.arc(60, 60, 12, 0.1 * Math.PI, 0.9 * Math.PI); tCtx.stroke();
-      tCtx.fillStyle = '#ec4899'; tCtx.fillRect(32, 32, 56, 8);
-      miaImage.src = tempCanvas.toDataURL();
-      miaImage.onload = () => { isMiaLoaded = true; };
-    }
-
-    function resizeCanvas() {
-      const containerWidth = wrapper.clientWidth;
-      const containerHeight = wrapper.clientHeight || 500;
-      canvas.width = containerWidth;
-      canvas.height = containerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-
-    function gameLoop() {
-      updateMiaPosition();
-      renderCanvas();
-      requestAnimationFrame(gameLoop);
-    }
-
-    let activeStationArrival = null;
-
-    function updateMiaPosition() {
-      const dx = targetX - miaX;
-      const dy = targetY - miaY;
-      const dist = Math.hypot(dx, dy);
-      if (dist > 0.008) {
-        miaX += (dx / dist) * miaSpeed;
-        miaY += (dy / dist) * miaSpeed;
-      } else {
-        miaX = targetX;
-        miaY = targetY;
-        if (activeStationArrival) {
-          const st = activeStationArrival;
-          activeStationArrival = null;
-          setTimeout(() => { openStationModal(st); }, 300);
-        }
-      }
-    }
-
-    function renderCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (isMapLoaded) ctx.drawImage(mapImage, 0, 0, canvas.width, canvas.height);
-
-      stations.forEach((st, idx) => {
-        const px = st.rx * canvas.width;
-        const py = st.ry * canvas.height;
-        const isUnlocked = unlockedBadges.includes(st.id);
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(px, py, 18, 0, Math.PI * 2);
-        ctx.fillStyle = isUnlocked ? '#10b981' : (st.color || '#f59e0b');
-        ctx.shadowColor = 'rgba(0,0,0,0.5)';
-        ctx.shadowBlur = 8;
-        ctx.fill();
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = '#ffffff';
-        ctx.stroke();
-        ctx.restore();
-
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 14px "Font Awesome 6 Free", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        
-        if (isUnlocked) {
-          ctx.fillText('✓', px, py);
-        } else {
-          ctx.fillText((idx + 1).toString(), px, py + 1);
-        }
-
-        ctx.font = 'bold 11px Fredoka, sans-serif';
-        ctx.fillStyle = '#ffffff';
-        ctx.strokeStyle = '#0f172a';
-        ctx.lineWidth = 3;
-        ctx.strokeText(st.title, px, py + 30);
-        ctx.fillText(st.title, px, py + 30);
-      });
-
-      const playerPx = miaX * canvas.width;
-      const playerPy = miaY * canvas.height;
-      ctx.save();
-      ctx.beginPath();
-      ctx.ellipse(playerPx, playerPy, 18, 8, 0, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-      ctx.fill();
-
-      const spriteSize = Math.min(canvas.width, canvas.height) * 0.14;
-      if (isMiaLoaded) {
-        ctx.drawImage(miaImage, playerPx - spriteSize / 2, playerPy - spriteSize * 0.9, spriteSize, spriteSize);
-      }
-      ctx.restore();
-    }
-
     const diceIcons = ['fa-dice-one', 'fa-dice-two', 'fa-dice-three', 'fa-dice-four', 'fa-dice-five', 'fa-dice-six'];
 
     function rollDice() {
@@ -774,10 +716,9 @@
           const chosenStation = stations[randomIndex];
           icon.className = `fa-solid ${diceIcons[randomIndex % 6]} text-xl`;
           resultText.innerText = `¡Mía va a: ${chosenStation.title}!`;
-          targetX = chosenStation.rx;
-          targetY = chosenStation.ry;
-          activeStationArrival = chosenStation;
+          moveMiaToStation(chosenStation);
           btn.disabled = false;
+          setTimeout(() => { openStationModal(chosenStation); }, 800);
         }
       }, 60);
     }
@@ -792,7 +733,9 @@
           isUnlocked ? 'bg-emerald-950/40 border-emerald-600/60 text-emerald-200 hover:bg-emerald-900/50' : 'bg-slate-900/60 border-slate-700 text-slate-300 hover:bg-slate-800'
         }`;
         card.onclick = () => {
-          targetX = st.rx; targetY = st.ry; activeStationArrival = st; playSynthSound('click');
+          moveMiaToStation(st);
+          openStationModal(st);
+          playSynthSound('click');
         };
         card.innerHTML = `
           <div class="flex items-center gap-3">
@@ -819,6 +762,7 @@
       } else {
         diplomaBtn.classList.add('hidden');
       }
+      renderSVGStations();
     }
 
     function openStationModal(st) {
@@ -984,7 +928,6 @@
 
     renderStationsList();
     updateSoundUI();
-    requestAnimationFrame(gameLoop);
   </script>
 </body>
 </html>
