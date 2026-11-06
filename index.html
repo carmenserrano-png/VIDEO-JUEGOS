@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mía en la Gran Aventura del CEIP Gabriela Mistral - 50º Aniversario</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap');
+    
+    body {
+      font-family: 'Quicksand', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    h1, h2, h3, .font-heading {
+      font-family: 'Fredoka', cursive;
+    }
+    .font-diploma-title {
+      font-family: 'Cinzel', serif;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 4px;
+    }
+    #confetti-canvas {
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 99;
+    }
+    @keyframes roll {
+      0% { transform: rotate(0deg) scale(0.8); }
+      50% { transform: rotate(180deg) scale(1.2); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+    .rolling {
+      animation: roll 0.6s ease-in-out;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #diploma-printable, #diploma-printable * {
+        visibility: visible;
+      }
+      #diploma-printable {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: white !important;
+        color: black !important;
+        margin: 0;
+        padding: 20px;
+        box-shadow: none !important;
+        border: none !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
+
+  <!-- INTRO INSTRUCTIONS MODAL -->
+  <div id="modal-intro" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-gradient-to-b from-indigo-900 via-slate-900 to-slate-950 border-2 border-amber-400 rounded-3xl max-w-xl w-full p-6 md:p-8 shadow-2xl text-center flex flex-col items-center gap-5 relative">
+      <div class="w-20 h-20 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-4xl shadow-xl">
+        🎓
+      </div>
+      <div>
+        <h2 class="text-2xl md:text-3xl font-extrabold text-amber-300 font-heading">¡Bienvenidos al CEIP Gabriela Mistral!</h2>
+        <p class="text-sm md:text-base text-indigo-200 font-semibold mt-1">Gran Juego del 50º Aniversario (Cartagena)</p>
+      </div>
+      <div class="text-xs md:text-sm text-slate-200 text-left bg-slate-950/60 p-4 rounded-2xl border border-indigo-700/50 flex flex-col gap-2 leading-relaxed w-full">
+        <p class="font-bold text-amber-400 border-b border-indigo-800 pb-1">📜 Instrucciones de la Aventura:</p>
+        <p>1. 🎲 <strong>Tira el Dado Interactivo:</strong> Mía se desplazará a una de las zonas del colegio.</p>
+        <p>2. ❓ <strong>Responde a los Retos:</strong> Cada zona tiene varias preguntas sobre la historia y personas del colegio.</p>
+        <p>3. 📜 <strong>¡Consigue el Diploma!</strong> Al completar las 8 insignias obtendrás tu Diploma Oficial.</p>
+      </div>
+      <button onclick="closeIntroModal()" class="w-full py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-lg rounded-xl shadow-lg transition">
+        ¡COMENZAR LA AVENTURA! 🚀
+      </button>
+    </div>
+  </div>
+
+  <!-- TOP BAR / HEADER -->
+  <header class="bg-indigo-900 border-b border-indigo-700 px-4 py-3 shadow-lg flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-amber-400 text-indigo-950 flex items-center justify-center font-bold text-xl shadow">
+        🎓
+      </div>
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold text-amber-300 leading-tight">50º Aniversario CEIP Gabriela Mistral</h1>
+        <p class="text-xs text-indigo-200">Aventura Histórica e Interactiva con Mía</p>
+      </div>
+    </div>
+    <!-- BADGES COUNTER -->
+    <div class="flex items-center gap-2 bg-indigo-950/80 px-4 py-1.5 rounded-full border border-indigo-700">
+      <i class="fa-solid fa-medal text-amber-400 text-lg"></i>
+      <span class="font-bold text-amber-300 ml-1" id="badge-count-text">0 / 8</span>
+      <span class="text-xs text-slate-400 hidden sm:inline">Insignias</span>
+    </div>
+    <!-- CONTROLS -->
+    <div class="flex items-center gap-2 flex-wrap">
+      <button onclick="openIntroModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-600 transition flex items-center gap-1.5">
+        <i class="fa-solid fa-circle-info text-amber-400"></i>
+        <span>Info</span>
+      </button>
+      <button id="btn-sound" onclick="toggleSound()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-600 transition flex items-center gap-1.5">
+        <i id="icon-sound" class="fa-solid fa-volume-high text-emerald-400"></i>
+        <span id="text-sound">Audio: ON</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN GAME AREA -->
+  <main class="flex-1 flex flex-col md:flex-row p-3 md:p-5 gap-4 max-w-7xl mx-auto w-full">
+    <!-- GAME CANVAS CONTAINER -->
+    <div class="flex-1 bg-slate-950 rounded-2xl border border-slate-800 shadow-2xl relative flex flex-col items-center justify-center p-2 min-h-[450px] overflow-hidden">
+      
+      <!-- Canvas Layer -->
+      <div id="canvas-wrapper" class="relative w-full h-full flex items-center justify-center min-h-[420px] max-h-[75vh]">
+        <canvas id="gameCanvas" class="rounded-xl shadow-inner max-w-full max-h-full object-contain"></canvas>
+        <canvas id="confetti-canvas"></canvas>
+      </div>
+
+      <!-- DICE CONTROLLER INTERFACE -->
+      <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 flex items-center gap-3 bg-slate-900/90 backdrop-blur-md px-5 py-3 rounded-2xl border-2 border-amber-400/80 shadow-2xl">
+        <button id="btn-roll-dice" onclick="rollDice()" class="bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-extrabold px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2 text-sm md:text-base">
+          <i id="dice-icon" class="fa-solid fa-dice-five text-xl"></i>
+          <span>¡TIRAR DADO!</span>
+        </button>
+        <div id="dice-result" class="text-xs md:text-sm font-bold text-slate-300 hidden sm:block">
+          Haz clic para mover a Mía
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SIDEBAR PANEL -->
+    <aside class="w-full md:w-80 bg-slate-800/90 border border-slate-700 rounded-2xl p-4 flex flex-col gap-4 shadow-xl">
+      <h2 class="text-lg font-bold text-amber-400 border-b border-slate-700 pb-2 flex items-center justify-between">
+        <span><i class="fa-solid fa-map-location-dot mr-2"></i>Estaciones del Cole</span>
+        <span class="text-xs text-slate-400 font-normal">(8 Zonas)</span>
+      </h2>
+      <!-- STATIONS LIST -->
+      <div id="stations-list" class="flex-1 flex flex-col gap-2 overflow-y-auto max-h-[380px] pr-1">
+      </div>
+      <!-- DIPLOMA BUTTON -->
+      <button id="btn-sidebar-diploma" onclick="openDiplomaModal()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 py-2.5 text-xs font-extrabold rounded-lg shadow-md transition flex items-center justify-center gap-2 hidden">
+        <i class="fa-solid fa-award text-base"></i> Ver Mi Diploma Oficial
+      </button>
+      <!-- RESET PROGRESS BUTTON -->
+      <button onclick="resetGameProgress()" class="mt-auto w-full bg-slate-700/60 hover:bg-slate-700 text-slate-300 hover:text-white py-2 text-xs font-semibold rounded-lg border border-slate-600 transition">
+        <i class="fa-solid fa-rotate-left mr-1"></i> Reiniciar Progreso
+      </button>
+    </aside>
+  </main>
+
+  <!-- MODAL FOR STATIONS & QUIZZES -->
+  <div id="modal-station" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-indigo-500/50 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative animate-fade-in flex flex-col gap-4 max-h-[90vh] overflow-y-auto">
+      
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <div id="modal-icon-bg" class="w-12 h-12 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center text-2xl font-bold shadow-lg">
+          <i id="modal-icon" class="fa-solid fa-book-open"></i>
+        </div>
+        <div>
+          <h3 id="modal-title" class="text-xl font-bold text-white">Estación</h3>
+          <p id="modal-subtitle" class="text-xs text-amber-400 font-semibold">Insignia</p>
+        </div>
+      </div>
+      <div id="modal-description" class="text-sm text-slate-300 leading-relaxed bg-slate-950/50 p-3 rounded-xl border border-slate-800">
+        Descripción de la estación...
+      </div>
+      <div id="modal-game-content" class="flex flex-col gap-3 py-2">
+      </div>
+      <div id="modal-feedback" class="hidden text-sm font-semibold p-3 rounded-xl text-center"></div>
+      
+      <div id="modal-footer-nav" class="hidden flex justify-between items-center gap-2 pt-2 border-t border-slate-800">
+        <span id="question-tracker" class="text-xs text-slate-400 font-medium">Pregunta 1 de 3</span>
+        <button id="btn-next-question" onclick="nextQuestion()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 disabled:opacity-50" disabled>
+          <span>Siguiente Pregunta</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VICTORY FINAL MODAL -->
+  <div id="modal-victory" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-gradient-to-b from-indigo-900 via-slate-900 to-slate-950 border-2 border-amber-400 rounded-3xl max-w-md w-full p-8 shadow-2xl text-center flex flex-col items-center gap-5">
+      <div class="w-24 h-24 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-5xl shadow-xl animate-bounce">
+        🏆
+      </div>
+      <div>
+        <h2 class="text-3xl font-extrabold text-amber-300 font-heading">¡ENHORABUENA!</h2>
+        <p class="text-lg text-slate-100 font-semibold mt-1">¡Has conseguido las 8 Insignias!</p>
+      </div>
+      <p class="text-sm text-slate-300 leading-relaxed">
+        Has completado la gran ruta conmemorativa del <strong>50º Aniversario del CEIP Gabriela Mistral de Cartagena</strong>. ¡Ya puedes conseguir tu diploma oficial!
+      </p>
+      <button onclick="closeVictoryModal(); openDiplomaModal();" class="w-full py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-lg rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+        <i class="fa-solid fa-graduation-cap"></i> ¡GENERAR MI DIPLOMA!
+      </button>
+    </div>
+  </div>
+
+  <!-- DIPLOMA MODAL & PRINTABLE AREA -->
+  <div id="modal-diploma" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-amber-500/50 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative flex flex-col gap-4 max-h-[90vh] overflow-y-auto">
+      
+      <button onclick="closeDiplomaModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl no-print">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- INPUT FORM -->
+      <div class="no-print bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col gap-3">
+        <h3 class="text-amber-400 font-bold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-pen-to-square"></i> Personaliza tu Diploma del 50º Aniversario
+        </h3>
+        <div class="flex gap-2">
+          <input type="text" id="student-name-input" placeholder="Escribe aquí tu nombre completo..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-400">
+          <button onclick="updateDiplomaName()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-2 font-bold text-xs rounded-lg transition">
+            Actualizar
+          </button>
+        </div>
+      </div>
+
+      <!-- PRINTABLE DIPLOMA FRAME -->
+      <div id="diploma-printable" class="bg-amber-50 text-slate-900 p-8 rounded-xl border-8 border-double border-amber-600 shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
+        
+        <div class="absolute top-2 left-2 text-amber-700 text-2xl">🏛️</div>
+        <div class="absolute top-2 right-2 text-amber-700 text-2xl">🏛️</div>
+        <div class="absolute bottom-2 left-2 text-amber-700 text-2xl">🎓</div>
+        <div class="absolute bottom-2 right-2 text-amber-700 text-2xl">⭐</div>
+
+        <p class="text-xs font-bold uppercase tracking-widest text-amber-800 mb-1">CEIP GABRIELA MISTRAL • CARTAGENA</p>
+        <h2 class="text-2xl md:text-3xl font-extrabold text-amber-900 font-diploma-title uppercase border-b-2 border-amber-700/40 pb-2 w-full">
+          Diploma del 50º Aniversario
+        </h2>
+        
+        <p class="text-sm text-slate-700 italic mt-4">Se otorga con orgullo el presente reconocimiento a:</p>
+        
+        <h3 id="diploma-student-name" class="text-2xl md:text-4xl font-extrabold text-indigo-900 font-heading my-3 border-b border-indigo-200 px-6 pb-1">
+          ¡Nombre del Alumno/a!
+        </h3>
+
+        <p class="text-xs md:text-sm text-slate-700 max-w-lg leading-relaxed mb-6">
+          Por haber superado con éxito todos los retos históricos, demostrado un excelente conocimiento de la historia de nuestro centro y completado las 8 insignias del mapa del colegio (1974 - 2024).
+        </p>
+
+        <div class="w-full flex justify-between items-end border-t border-amber-300 pt-4 mt-2">
+          <div class="text-left">
+            <span class="text-[10px] text-amber-800 font-bold block">FECHA DE EMISIÓN</span>
+            <span id="diploma-date" class="text-xs font-semibold text-slate-800">-- / -- / ----</span>
+          </div>
+          <div class="w-16 h-16 rounded-full bg-amber-500/20 border-2 border-amber-600 flex items-center justify-center text-2xl shadow-inner">
+            🏅
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] text-amber-800 font-bold block">CEIP GABRIELA MISTRAL</span>
+            <span class="text-xs font-semibold text-slate-800">50 Años Educando</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div class="no-print flex gap-3 pt-2">
+        <button onclick="window.print()" class="flex-1 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-xl shadow transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-print"></i> Imprimir / Guardar en PDF
+        </button>
+        <button onclick="closeDiplomaModal()" class="px-5 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition">
+          Cerrar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT GAME ENGINE -->
+  <script>
+    // DATOS DE PREGUNTAS ACTUALIZADOS SEGÚN EL DOCUMENTO
+    const stations = [
+      {
+        id: 'biblioteca',
+        title: 'Biblioteca Escolar',
+        subtitle: 'Historias y Lectura',
+        icon: 'fa-book-bookmark',
+        color: '#f59e0b',
+        rx: 0.45, ry: 0.82,
+        desc: 'Espacio lleno de fantasía, libros y teatro. A lo largo de los años ha contado con la dedicación de maestras fundamentales para impulsar la lectura en el centro.',
+        quizzes: [
+          {
+            question: '¿Qué maestras han sido responsables de este querido espacio de la biblioteca a lo largo de los años?',
+            correctAnswer: 'María Navarro, Concha y María Ángeles',
+            wrongAnswers: ['Rosalía, Carmen y Sofía', 'Marta, Elena y Lucía']
+          },
+          {
+            question: '¿Antes de inaugurarse el edificio actual en 1976, con qué nombre popular se conocía al colegio?',
+            correctAnswer: 'El albergue',
+            wrongAnswers: ['La antigua escuela', 'El caserón']
+          },
+          {
+            question: '¿A quién debe su nombre nuestro colegio "Gabriela Mistral"?',
+            correctAnswer: 'A una poeta chilena Ganadora del Premio Nobel de Literatura',
+            wrongAnswers: ['A una famosa pintora de Cartagena', 'A la primera directora que tuvo el centro']
+          }
+        ]
+      },
+      {
+        id: 'conserjeria',
+        title: 'Conserjería',
+        subtitle: 'Atención y Bienvenida',
+        icon: 'fa-door-open',
+        color: '#3b82f6',
+        rx: 0.74, ry: 0.78,
+        desc: 'El primer rostro amable que te da la bienvenida al centro. Un pilar fundamental para el funcionamiento diario del colegio.',
+        quizzes: [
+          {
+            question: '¿Sabes cómo se llama nuestro conserje actual y quién fue el primer conserje del colegio?',
+            correctAnswer: 'El primer conserje fue Tomás y el actual es Juan',
+            wrongAnswers: ['El primer conserje fue Paco y el actual es Pedro', 'El primer conserje fue Antonio y el actual es Manuel']
+          },
+          {
+            question: '¿Qué tarea fundamental se realiza desde la Conserjería cada mañana?',
+            correctAnswer: 'Abrir y cerrar las puertas del centro.',
+            wrongAnswers: ['Preparar la comida del comedor', 'Impartir las clases de educación física']
+          },
+          {
+            question: '¿Qué elemento histórico solía sonar en los colegios antiguos para indicar el cambio de clase?',
+            correctAnswer: 'Una sirena o campana manual',
+            wrongAnswers: ['Un timbre digital con música pop', 'Un silbato de árbitro']
+          }
+        ]
+      },
+      {
+        id: 'direccion',
+        title: 'Despacho de Dirección',
+        subtitle: 'Equipo Directivo e Historia',
+        icon: 'fa-user-tie',
+        color: '#8b5cf6',
+        rx: 0.90, ry: 0.84,
+        desc: 'Desde aquí se lidera la labor docente de nuestro centro. Un espacio con mucha historia desde la fundación del colegio.',
+        quizzes: [
+          {
+            question: '¿Quiénes forman el actual equipo directivo del colegio?',
+            correctAnswer: 'Flori (Directora), Paco (Jefe de Estudios) y Paqui (Secretaria)',
+            wrongAnswers: ['Mercedes (Directora), Germán (Jefe de Estudios) y Tomás (Secretario)', 'Concha (Directora), Juan (Jefe de Estudios) y Olivia (Secretaria)']
+          },
+          {
+            question: '¿En qué año abrió sus puertas por primera vez el CEIP Gabriela Mistral en su edificio actual?',
+            correctAnswer: 'En 1976',
+            wrongAnswers: ['En 1985', 'En 2000']
+          },
+          {
+            question: '¿Cuántos años de historia estamos celebrando en este aniversario tan especial?',
+            correctAnswer: '50 Aniversario',
+            wrongAnswers: ['25 Aniversario', '75 Aniversario']
+          }
+        ]
+      },
+      {
+        id: 'sala_profesores',
+        title: 'Sala de Profesores',
+        subtitle: 'El Claustro de Maestros',
+        icon: 'fa-chalkboard-user',
+        color: '#ec4899',
+        rx: 0.58, ry: 0.82,
+        desc: 'El punto de encuentro de los docentes donde se planifica la enseñanza y proyectos para todos los cursos.',
+        quizzes: [
+          {
+            question: '¿Cuántos maestros forman actualmente el gran claustro del CEIP Gabriela Mistral?',
+            correctAnswer: '38 maestros',
+            wrongAnswers: ['15 maestros', '45 maestros']
+          },
+          {
+            question: '¿Qué reunión importante realiza el profesorado en la Sala de Profesores para preparar el curso?',
+            correctAnswer: 'Claustros de profesores y reuniones de ciclo',
+            wrongAnswers: ['Competiciones de ajedrez', 'Fiestas de cumpleaños de alumnos']
+          },
+          {
+            question: '¿Qué valor principal promueve el claustro de profesores entre todos los estudiantes?',
+            correctAnswer: 'Respeto, trabajo en equipo y esfuerzo',
+            wrongAnswers: ['Competitividad e individualismo', 'Jugar todo el día sin estudiar']
+          }
+        ]
+      },
+      {
+        id: 'aula_abierta',
+        title: 'Aula Abierta',
+        subtitle: 'Inclusión y Diversidad',
+        icon: 'fa-heart',
+        color: '#10b981',
+        rx: 0.15, ry: 0.42,
+        desc: 'Proyecto pionero de inclusión en Cartagena que comenzó con muchísima ilusión y solo 5 alumnos.',
+        quizzes: [
+          {
+            question: '¿En qué curso escolar comenzó su andadura el Aula Abierta con 5 alumnos?',
+            correctAnswer: 'En el curso 2008 / 2009',
+            wrongAnswers: ['En el curso 2015 / 2016', 'En el curso 1999 / 2000']
+          },
+          {
+            question: '¿Cuál es el objetivo principal del Aula Abierta en nuestro colegio?',
+            correctAnswer: 'Ofrecer una educación inclusiva y adaptada a las necesidades de cada alumno',
+            wrongAnswers: ['Hacer clases solo de matemáticas avanzadas', 'Entrenar a los deportistas de élite del colegio']
+          },
+          {
+            question: '¿Qué lema resume el espíritu inclusivo del CEIP Gabriela Mistral?',
+            correctAnswer: 'Todos diferentes, todos iguales',
+            wrongAnswers: ['Ganar siempre es lo primero', 'Aprender rápido sin mirar atrás']
+          }
+        ]
+      },
+      {
+        id: 'aula_futuro',
+        title: 'Aula de Informática y Futuro',
+        subtitle: 'Tecnología e Innovación',
+        icon: 'fa-laptop-code',
+        color: '#06b6d4',
+        rx: 0.45, ry: 0.42,
+        desc: 'Espacio dedicado a las nuevas tecnologías y la informática desde hace décadas en nuestro colegio.',
+        quizzes: [
+          {
+            question: '¿En qué año y gracias al esfuerzo de quién se inauguró la primera aula de informática con ordenadores?',
+            correctAnswer: 'En 1998, gracias a Pepe Munuera',
+            wrongAnswers: ['En 2005, gracias a Juan el conserje', 'En 1976, gracias a Tomás']
+          },
+          {
+            question: '¿Qué herramientas digitales se utilizan hoy en día en las aulas del colegio?',
+            correctAnswer: 'Paneles digitales interactivos, ordenadores y tablets',
+            wrongAnswers: ['Solo pizarras de tiza verde y cuadernos', 'Máquinas de escribir antiguas']
+          },
+          {
+            question: '¿Por qué es importante aprender robótica y tecnología en el colegio?',
+            correctAnswer: 'Para desarrollar el pensamiento lógico, la creatividad y prepararnos para el futuro',
+            wrongAnswers: ['Para jugar a videojuegos todo el tiempo', 'Para sustituir a los profesores por robots']
+          }
+        ]
+      },
+      {
+        id: 'deportes',
+        title: 'Pistas Deportivas',
+        subtitle: 'Deporte, Salud y Juego',
+        icon: 'fa-volleyball',
+        color: '#f97316',
+        rx: 0.58, ry: 0.52,
+        desc: 'Lugar de diversión, trabajo en equipo y partidos inolvidables con nuestros profesores de Educación Física.',
+        quizzes: [
+          {
+            question: '¿Quién es el maestro de Educación Física más veterano del centro que daba clases junto a la seño Paqui?',
+            correctAnswer: 'Germán Montoya',
+            wrongAnswers: ['Paco el Jefe de Estudios', 'Pepe Munuera']
+          },
+          {
+            question: '¿Qué deporte y eventos se practican habitualmente en nuestras pistas durante los recreos y la clase de EF?',
+            correctAnswer: 'Baloncesto, fútbol, mate y carreras de atletismo',
+            wrongAnswers: ['Esquí sobre nieve y patinaje sobre hielo', 'Surf y natación con delfines']
+          },
+          {
+            question: '¿Qué actitud es la más importante cuando jugamos en el patio del colegio?',
+            correctAnswer: 'El juego limpio (Fair Play) y saber ganar y perder con respeto',
+            wrongAnswers: ['Discutir todas las jugadas para ganar siempre', 'No dejar jugar a los más pequeños']
+          }
+        ]
+      },
+      {
+        id: 'comedor',
+        title: 'Comedor Escolar',
+        subtitle: 'Hábitos Saludables y Convivencia',
+        icon: 'fa-utensils',
+        color: '#ef4444',
+        rx: 0.80, ry: 0.50,
+        desc: 'Un espacio moderno inaugurado recientemente para garantizar una alimentación sana y equilibrada a todo el alumnado.',
+        quizzes: [
+          {
+            question: '¿En qué fecha se inauguró oficialmente el Comedor Escolar de nuestro colegio?',
+            correctAnswer: 'El 21 de febrero de 2019',
+            wrongAnswers: ['El 15 de septiembre de 2010', 'El 10 de octubre de 2000']
+          },
+          {
+            question: '¿Qué hábito saludable es imprescindible realizar justo antes de entrar a comer?',
+            correctAnswer: 'Lavarse muy bien las manos con agua y jabón',
+            wrongAnswers: ['Dar tres saltos en la puerta', 'Correr por el pasillo']
+          },
+          {
+            question: '¿Cómo debe ser la dieta del menú escolar para cuidar nuestra salud?',
+            correctAnswer: 'Equilibrada, rica en frutas, verduras, legumbres y pescado',
+            wrongAnswers: ['Basada únicamente en golosinas y refrescos', 'Comer solo patatas fritas todos los días']
+          }
+        ]
+      }
+    ];
+
+    let unlockedBadges = JSON.parse(localStorage.getItem('gabriela_unlocked_badges')) || [];
+    let isSoundOn = localStorage.getItem('gabriela_sound_on') !== 'false';
+    
+    let miaX = 0.65;
+    let miaY = 0.70;
+    let targetX = 0.65;
+    let targetY = 0.70;
+    let miaSpeed = 0.015;
+
+    let mapImage = new Image();
+    let miaImage = new Image();
+    let isMapLoaded = false;
+    let isMiaLoaded = false;
+    let audioCtx = null;
+
+    let currentStation = null;
+    let currentQuizIndex = 0;
+    let currentQuizPrepared = null; // Almacenará las opciones mezcladas
+
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const wrapper = document.getElementById('canvas-wrapper');
+
+    createDefaultMapTexture();
+    createDefaultMiaAvatar();
+
+    function playSynthSound(type) {
+      if (!isSoundOn) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'click' || type === 'dice') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(400, now);
+          osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+          osc.start(now); osc.stop(now + 0.08);
+        } else if (type === 'success') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.08);
+          osc.frequency.setValueAtTime(783.99, now + 0.16);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+          osc.start(now); osc.stop(now + 0.3);
+        } else if (type === 'error') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.setValueAtTime(180, now + 0.1);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+          osc.start(now); osc.stop(now + 0.25);
+        } else if (type === 'victory') {
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+            const subOsc = audioCtx.createOscillator();
+            const subGain = audioCtx.createGain();
+            subOsc.connect(subGain);
+            subGain.connect(audioCtx.destination);
+            subOsc.type = 'triangle';
+            subOsc.frequency.setValueAtTime(freq, now + idx * 0.1);
+            subGain.gain.setValueAtTime(0.3, now + idx * 0.1);
+            subGain.gain.linearRampToValueAtTime(0.01, now + idx * 0.1 + 0.25);
+            subOsc.start(now + idx * 0.1);
+            subOsc.stop(now + idx * 0.1 + 0.25);
+          });
+        }
+      } catch (e) {}
+    }
+
+    function toggleSound() {
+      isSoundOn = !isSoundOn;
+      try { localStorage.setItem('gabriela_sound_on', isSoundOn); } catch (e) {}
+      updateSoundUI();
+      if (isSoundOn) playSynthSound('click');
+    }
+
+    function updateSoundUI() {
+      const text = document.getElementById('text-sound');
+      const icon = document.getElementById('icon-sound');
+      if (isSoundOn) {
+        text.innerText = 'Audio: ON';
+        icon.className = 'fa-solid fa-volume-high text-emerald-400';
+      } else {
+        text.innerText = 'Audio: Mute';
+        icon.className = 'fa-solid fa-volume-xmark text-slate-400';
+      }
+    }
+
+    function createDefaultMapTexture() {
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = 1000;
+      tempCanvas.height = 650;
+      const tCtx = tempCanvas.getContext('2d');
+      tCtx.fillStyle = '#0f172a';
+      tCtx.fillRect(0, 0, 1000, 650);
+      tCtx.strokeStyle = '#1e293b';
+      tCtx.lineWidth = 1;
+      for (let x = 0; x < 1000; x += 40) {
+        tCtx.beginPath(); tCtx.moveTo(x, 0); tCtx.lineTo(x, 650); tCtx.stroke();
+      }
+      for (let y = 0; y < 650; y += 40) {
+        tCtx.beginPath(); tCtx.moveTo(0, y); tCtx.lineTo(1000, y); tCtx.stroke();
+      }
+      tCtx.fillStyle = 'rgba(30, 41, 59, 0.9)';
+      tCtx.strokeStyle = '#38bdf8';
+      tCtx.lineWidth = 4;
+      tCtx.fillRect(100, 450, 830, 160); tCtx.strokeRect(100, 450, 830, 160);
+      tCtx.fillRect(100, 180, 750, 220); tCtx.strokeRect(100, 180, 750, 220);
+      tCtx.fillStyle = 'rgba(16, 185, 129, 0.15)';
+      tCtx.fillRect(100, 20, 750, 140);
+      tCtx.strokeStyle = '#10b981';
+      tCtx.strokeRect(100, 20, 750, 140);
+      tCtx.fillStyle = '#f59e0b';
+      tCtx.font = 'bold 22px Fredoka, sans-serif';
+      tCtx.fillText('CEIP GABRIELA MISTRAL - PLANO DE RUTAS', 260, 50);
+      tCtx.fillStyle = '#94a3b8';
+      tCtx.font = '14px Quicksand, sans-serif';
+      tCtx.fillText('🎉 50º Aniversario - Recorre el colegio con Mía usando el Dado 🎉', 240, 80);
+      mapImage.src = tempCanvas.toDataURL();
+      mapImage.onload = () => { isMapLoaded = true; resizeCanvas(); };
+    }
+
+    function createDefaultMiaAvatar() {
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = 120;
+      tempCanvas.height = 120;
+      const tCtx = tempCanvas.getContext('2d');
+      tCtx.fillStyle = '#f59e0b';
+      tCtx.beginPath(); tCtx.arc(60, 60, 55, 0, Math.PI * 2); tCtx.fill();
+      tCtx.lineWidth = 4; tCtx.strokeStyle = '#ffffff'; tCtx.stroke();
+      tCtx.fillStyle = '#fde047';
+      tCtx.beginPath(); tCtx.arc(60, 45, 40, 0, Math.PI * 2); tCtx.fill();
+      tCtx.fillStyle = '#fed7aa';
+      tCtx.beginPath(); tCtx.arc(60, 55, 28, 0, Math.PI * 2); tCtx.fill();
+      tCtx.fillStyle = '#065f46';
+      tCtx.beginPath(); tCtx.arc(50, 50, 5, 0, Math.PI * 2); tCtx.fill();
+      tCtx.beginPath(); tCtx.arc(70, 50, 5, 0, Math.PI * 2); tCtx.fill();
+      tCtx.strokeStyle = '#9a3412'; tCtx.lineWidth = 3;
+      tCtx.beginPath(); tCtx.arc(60, 60, 12, 0.1 * Math.PI, 0.9 * Math.PI); tCtx.stroke();
+      tCtx.fillStyle = '#ec4899'; tCtx.fillRect(32, 32, 56, 8);
+      miaImage.src = tempCanvas.toDataURL();
+      miaImage.onload = () => { isMiaLoaded = true; };
+    }
+
+    function resizeCanvas() {
+      const containerWidth = wrapper.clientWidth;
+      const containerHeight = wrapper.clientHeight || 500;
+      let aspect = 1000 / 650;
+      let targetW = containerWidth;
+      let targetH = containerWidth / aspect;
+      if (targetH > containerHeight) {
+        targetH = containerHeight;
+        targetW = containerHeight * aspect;
+      }
+      canvas.width = targetW;
+      canvas.height = targetH;
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function gameLoop() {
+      updateMiaPosition();
+      renderCanvas();
+      requestAnimationFrame(gameLoop);
+    }
+
+    let activeStationArrival = null;
+
+    function updateMiaPosition() {
+      const dx = targetX - miaX;
+      const dy = targetY - miaY;
+      const dist = Math.hypot(dx, dy);
+      if (dist > 0.008) {
+        miaX += (dx / dist) * miaSpeed;
+        miaY += (dy / dist) * miaSpeed;
+      } else {
+        miaX = targetX;
+        miaY = targetY;
+        if (activeStationArrival) {
+          const st = activeStationArrival;
+          activeStationArrival = null;
+          setTimeout(() => { openStationModal(st); }, 300);
+        }
+      }
+    }
+
+    function renderCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (isMapLoaded) ctx.drawImage(mapImage, 0, 0, canvas.width, canvas.height);
+
+      stations.forEach((st, idx) => {
+        const px = st.rx * canvas.width;
+        const py = st.ry * canvas.height;
+        const isUnlocked = unlockedBadges.includes(st.id);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(px, py, 18, 0, Math.PI * 2);
+        ctx.fillStyle = isUnlocked ? '#10b981' : (st.color || '#f59e0b');
+        ctx.shadowColor = 'rgba(0,0,0,0.5)';
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#ffffff';
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 14px "Font Awesome 6 Free", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        if (isUnlocked) {
+          ctx.fillText('✓', px, py);
+        } else {
+          ctx.fillText((idx + 1).toString(), px, py + 1);
+        }
+
+        ctx.font = 'bold 11px Fredoka, sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 3;
+        ctx.strokeText(st.title, px, py + 30);
+        ctx.fillText(st.title, px, py + 30);
+      });
+
+      const playerPx = miaX * canvas.width;
+      const playerPy = miaY * canvas.height;
+      ctx.save();
+      ctx.beginPath();
+      ctx.ellipse(playerPx, playerPy, 18, 8, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+      ctx.fill();
+
+      const spriteSize = Math.min(canvas.width, canvas.height) * 0.12;
+      if (isMiaLoaded) {
+        ctx.drawImage(miaImage, playerPx - spriteSize / 2, playerPy - spriteSize * 0.9, spriteSize, spriteSize);
+      }
+      ctx.restore();
+    }
+
+    const diceIcons = ['fa-dice-one', 'fa-dice-two', 'fa-dice-three', 'fa-dice-four', 'fa-dice-five', 'fa-dice-six'];
+
+    function rollDice() {
+      const btn = document.getElementById('btn-roll-dice');
+      const icon = document.getElementById('dice-icon');
+      const resultText = document.getElementById('dice-result');
+
+      btn.disabled = true;
+      icon.classList.add('rolling');
+      playSynthSound('dice');
+
+      let rolls = 0;
+      const interval = setInterval(() => {
+        const tempIndex = Math.floor(Math.random() * stations.length);
+        icon.className = `fa-solid ${diceIcons[tempIndex % 6]} text-xl rolling`;
+        rolls++;
+        if (rolls > 10) {
+          clearInterval(interval);
+          icon.classList.remove('rolling');
+          const randomIndex = Math.floor(Math.random() * stations.length);
+          const chosenStation = stations[randomIndex];
+          icon.className = `fa-solid ${diceIcons[randomIndex % 6]} text-xl`;
+          resultText.innerText = `¡Mía va a: ${chosenStation.title}!`;
+          targetX = chosenStation.rx;
+          targetY = chosenStation.ry;
+          activeStationArrival = chosenStation;
+          btn.disabled = false;
+        }
+      }, 60);
+    }
+
+    function renderStationsList() {
+      const listEl = document.getElementById('stations-list');
+      listEl.innerHTML = '';
+      stations.forEach((st) => {
+        const isUnlocked = unlockedBadges.includes(st.id);
+        const card = document.createElement('div');
+        card.className = `p-3 rounded-xl border transition cursor-pointer flex items-center justify-between gap-3 ${
+          isUnlocked ? 'bg-emerald-950/40 border-emerald-600/60 text-emerald-200 hover:bg-emerald-900/50' : 'bg-slate-900/60 border-slate-700 text-slate-300 hover:bg-slate-800'
+        }`;
+        card.onclick = () => {
+          targetX = st.rx; targetY = st.ry; activeStationArrival = st; playSynthSound('click');
+        };
+        card.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold shadow ${isUnlocked ? 'bg-emerald-500 text-slate-950' : 'bg-slate-700 text-slate-200'}">
+              <i class="fa-solid ${st.icon}"></i>
+            </div>
+            <div>
+              <p class="text-xs font-bold leading-tight">${st.title}</p>
+              <p class="text-[10px] opacity-75">${st.subtitle}</p>
+            </div>
+          </div>
+          <div>
+            ${isUnlocked ? '<span class="text-xs text-emerald-400 font-extrabold flex items-center gap-1"><i class="fa-solid fa-medal"></i> Ganada</span>' : '<span class="text-[10px] bg-slate-800 px-2 py-1 rounded text-slate-400 border border-slate-700">Pendiente</span>'}
+          </div>
+        `;
+        listEl.appendChild(card);
+      });
+      
+      document.getElementById('badge-count-text').innerText = `${unlockedBadges.length} / ${stations.length}`;
+
+      const diplomaBtn = document.getElementById('btn-sidebar-diploma');
+      if (unlockedBadges.length === stations.length) {
+        diplomaBtn.classList.remove('hidden');
+      } else {
+        diplomaBtn.classList.add('hidden');
+      }
+    }
+
+    function openStationModal(st) {
+      currentStation = st;
+      currentQuizIndex = 0;
+      document.getElementById('modal-title').innerText = st.title;
+      document.getElementById('modal-subtitle').innerText = `Insignia: ${st.subtitle}`;
+      document.getElementById('modal-description').innerText = st.desc;
+      document.getElementById('modal-icon').className = `fa-solid ${st.icon}`;
+      document.getElementById('modal-feedback').className = 'hidden text-sm font-semibold p-3 rounded-xl text-center';
+      
+      loadQuizQuestion();
+      document.getElementById('modal-station').classList.remove('hidden');
+    }
+
+    // FUNCIÓN PARA MEZCLAR ALEATORIAMENTE LAS OPCIONES
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function loadQuizQuestion() {
+      const qContainer = document.getElementById('modal-game-content');
+      const footerNav = document.getElementById('modal-footer-nav');
+      const nextBtn = document.getElementById('btn-next-question');
+      
+      document.getElementById('modal-feedback').classList.add('hidden');
+      nextBtn.disabled = true; // Deshabilitado hasta responder correctamente
+      qContainer.innerHTML = '';
+
+      const rawQuiz = currentStation.quizzes[currentQuizIndex];
+
+      // Preparamos las opciones de forma aleatoria sin cambiar siempre la primera
+      const allOptions = [
+        { text: rawQuiz.correctAnswer, isCorrect: true },
+        ...rawQuiz.wrongAnswers.map(ans => ({ text: ans, isCorrect: false }))
+      ];
+      const shuffledOptions = shuffleArray(allOptions);
+      currentQuizPrepared = { question: rawQuiz.question, options: shuffledOptions };
+
+      const questionTitle = document.createElement('p');
+      questionTitle.className = 'text-sm font-bold text-amber-300 mb-2';
+      questionTitle.innerText = `❓ Reto ${currentQuizIndex + 1}: ${currentQuizPrepared.question}`;
+      qContainer.appendChild(questionTitle);
+
+      const optsDiv = document.createElement('div');
+      optsDiv.className = 'flex flex-col gap-2';
+
+      currentQuizPrepared.options.forEach((optObj, optIdx) => {
+        const btn = document.createElement('button');
+        btn.className = 'w-full text-left p-3 rounded-xl bg-slate-800 hover:bg-indigo-900/60 border border-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-between group option-btn';
+        btn.innerHTML = `<span>${optObj.text}</span><i class="fa-regular fa-circle text-slate-500 group-hover:text-amber-400"></i>`;
+        btn.onclick = () => checkAnswer(optObj.isCorrect, btn);
+        optsDiv.appendChild(btn);
+      });
+
+      qContainer.appendChild(optsDiv);
+      if (currentStation.quizzes.length > 1) {
+        footerNav.classList.remove('hidden');
+        document.getElementById('question-tracker').innerText = `Pregunta ${currentQuizIndex + 1} de ${currentStation.quizzes.length}`;
+        nextBtn.innerHTML = (currentQuizIndex + 1 === currentStation.quizzes.length) ? '<span>Finalizar Reto</span> <i class="fa-solid fa-check"></i>' : '<span>Siguiente Pregunta</span> <i class="fa-solid fa-arrow-right"></i>';
+      } else {
+        footerNav.classList.add('hidden');
+      }
+    }
+
+    function checkAnswer(isCorrect, selectedBtn) {
+      const feedback = document.getElementById('modal-feedback');
+      const nextBtn = document.getElementById('btn-next-question');
+
+      if (isCorrect) {
+        playSynthSound('success');
+        feedback.className = 'text-sm font-semibold p-3 rounded-xl text-center bg-emerald-900/80 border border-emerald-500 text-emerald-200';
+        feedback.innerText = '¡Correcto! 🎉 Excelente respuesta.';
+        nextBtn.disabled = false; // Habilitar avance
+
+        // Si es la última pregunta del bloque, otorgar la insignia
+        if (currentQuizIndex + 1 === currentStation.quizzes.length) {
+          if (!unlockedBadges.includes(currentStation.id)) {
+            unlockedBadges.push(currentStation.id);
+            try { localStorage.setItem('gabriela_unlocked_badges', JSON.stringify(unlockedBadges)); } catch (e) {}
+            renderStationsList();
+          }
+        }
+      } else {
+        playSynthSound('error');
+        feedback.className = 'text-sm font-semibold p-3 rounded-xl text-center bg-rose-900/80 border border-rose-500 text-rose-200';
+        feedback.innerText = '¡Vaya! Esa no es la respuesta correcta. ¡Inténtalo de nuevo!';
+      }
+      feedback.classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+      playSynthSound('click');
+      if (currentQuizIndex + 1 < currentStation.quizzes.length) {
+        currentQuizIndex++;
+        loadQuizQuestion();
+      } else {
+        closeModal();
+        if (unlockedBadges.length === stations.length) {
+          setTimeout(() => { openVictoryModal(); }, 400);
+        }
+      }
+    }
+
+    function closeModal() {
+      playSynthSound('click');
+      document.getElementById('modal-station').classList.add('hidden');
+    }
+
+    function openIntroModal() {
+      playSynthSound('click');
+      document.getElementById('modal-intro').classList.remove('hidden');
+    }
+
+    function closeIntroModal() {
+      playSynthSound('click');
+      document.getElementById('modal-intro').classList.add('hidden');
+    }
+
+    function openVictoryModal() {
+      playSynthSound('victory');
+      document.getElementById('modal-victory').classList.remove('hidden');
+    }
+
+    function closeVictoryModal() {
+      playSynthSound('click');
+      document.getElementById('modal-victory').classList.add('hidden');
+    }
+
+    function openDiplomaModal() {
+      playSynthSound('click');
+      const dateStr = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+      document.getElementById('diploma-date').innerText = dateStr;
+      document.getElementById('modal-diploma').classList.remove('hidden');
+    }
+
+    function closeDiplomaModal() {
+      playSynthSound('click');
+      document.getElementById('modal-diploma').classList.add('hidden');
+    }
+
+    function updateDiplomaName() {
+      playSynthSound('click');
+      const val = document.getElementById('student-name-input').value.trim();
+      const nameHeading = document.getElementById('diploma-student-name');
+      if (val) {
+        nameHeading.innerText = val;
+      } else {
+        nameHeading.innerText = '¡Nombre del Alumno/a!';
+      }
+    }
+
+    function resetGameProgress() {
+      if (confirm('¿Quieres reiniciar las insignias y el progreso del juego?')) {
+        unlockedBadges = [];
+        try { localStorage.removeItem('gabriela_unlocked_badges'); } catch (e) {}
+        renderStationsList();
+        playSynthSound('click');
+      }
+    }
+
+    renderStationsList();
+    updateSoundUI();
+    requestAnimationFrame(gameLoop);
+  </script>
+</body>
+</html>
